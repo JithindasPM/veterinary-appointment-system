@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VET WIZARD - Doctor Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --bs-primary: #3498db;
+            --bs-secondary: #2ecc71;
+            --bs-dark: #2c3e50;
+            --bs-light: #ecf0f1;
+            --bs-danger: #e74c3c;
+            --bs-warning: #f39c12;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* Sidebar custom styling */
+        .sidebar {
+            background-color: var(--bs-dark);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            width: 250px;
+            z-index: 100;
+        }
+        
+        .sidebar-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 20px;
+        }
+        
+        .sidebar-header h2 {
+            color: var(--bs-primary);
+        }
+        
+        .nav-link {
+            color: white;
+            border-left: 3px solid transparent;
+            padding: 12px 20px;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 3px solid var(--bs-primary);
+            color: white;
+        }
+        
+        .nav-link i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Main content spacing */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        
+        /* Card customization */
+        .card {
+            border: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+        
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .card-icon.appointments {
+            background-color: var(--bs-primary);
+        }
+        
+        .card-icon.patients {
+            background-color: var(--bs-secondary);
+        }
+        
+        .card-icon.emergency {
+            background-color: var(--bs-danger);
+        }
+        
+        .card-icon.schedule {
+            background-color: var(--bs-warning);
+        }
+        
+        /* Status badges */
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: white;
+            display: inline-block;
+        }
+        
+        .status-pending {
+            background-color: var(--bs-warning);
+        }
+        
+        .status-confirmed {
+            background-color: var(--bs-secondary);
+        }
+        
+        .status-emergency {
+            background-color: var(--bs-danger);
+        }
+        
+        /* Pet avatar */
+        .pet-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .pet-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* User avatar */
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--bs-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        /* Modal styles */
+        .custom-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2000;
+        }
+        
+        .custom-modal-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+        }
+        
+        .custom-modal-dialog {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 500px;
+            animation: modalFadeIn 0.4s ease-out;
+        }
+        
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+        
+        .status-icon {
+            font-size: 3.5rem;
+            color: var(--bs-warning);
+            margin-bottom: 20px;
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+        
+        .progress-fill {
+            height: 100%;
+            width: 70%;
+            background: linear-gradient(to right, #f39c12, #e67e22);
+            border-radius: 4px;
+            animation: progress 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes progress {
+            from { width: 30%; }
+            to { width: 70%; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid p-0">
+        <div class="row g-0">
+            <!-- Sidebar -->
+            <div class="col-auto p-0">
+                <div class="sidebar">
+                    <div class="sidebar-header p-4 text-center">
+                        <a class="text-decoration-none" href="{% url 'home' %}">
+                            <h2 class="mb-1">VET WIZARD</h2>
+                        </a>
+                        <p class="text-white-50 mb-0">Doctor Portal</p>
+                    </div>
+                    <ul class="nav flex-column mt-4">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'doctor' %}"><i class="fas fa-th-large me-2"></i> Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'doctor_profile_update' %}"><i class="fas fa-user me-2"></i> My Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'appointment_doctor' %}"><i class="fas fa-clipboard-list me-2"></i> Appointments</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-comments me-2"></i> Chat with Patients</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-bell me-2"></i> Notifications</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2"></i> Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col">
+                <div class="main-content">
+                    {% block content %}
+                    <!-- Header -->
+                    <div class="card mb-4">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div>
+                                <h2 class="mb-1">Welcome back, Dr. {{request.user}} !</h2>
+                                <p class="text-secondary mb-0">Here's your overview for today</p>
+                            </div>
+                            <div class="user-avatar">DS</div>
+                        </div>
+                    </div>
+
+                    <!-- Dashboard Cards -->
+                    <div class="row mb-4">
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h5 class="card-title">Today's Appointments</h5>
+                                        <div class="card-icon appointments">
+                                            <i class="fas fa-calendar-check"></i>
+                                        </div>
+                                    </div>
+                                    <h2 class="display-6">8</h2>
+                                    <p class="text-secondary">3 pending approval</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h5 class="card-title">Total Patients</h5>
+                                        <div class="card-icon patients">
+                                            <i class="fas fa-paw"></i>
+                                        </div>
+                                    </div>
+                                    <h2 class="display-6">124</h2>
+                                    <p class="text-secondary">+3 new this week</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h5 class="card-title">Emergency Requests</h5>
+                                        <div class="card-icon emergency">
+                                            <i class="fas fa-heartbeat"></i>
+                                        </div>
+                                    </div>
+                                    <h2 class="display-6">1</h2>
+                                    <p class="text-secondary">Urgent attention needed</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h5 class="card-title">Available Slots</h5>
+                                        <div class="card-icon schedule">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                    </div>
+                                    <h2 class="display-6">5</h2>
+                                    <p class="text-secondary">For today's schedule</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pending Appointments -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title pb-2 border-bottom mb-3">Pending Appointments</h5>
+
+                            <!-- Appointment Item 1 -->
+                            <div class="row py-3 border-bottom align-items-center">
+                                <div class="col-md-3 mb-3 mb-md-0">
+                                    <div class="d-flex align-items-center">
+                                        <div class="pet-avatar me-3">
+                                            <img src="/api/placeholder/50/50" alt="Pet Image">
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold">Max (Golden Retriever)</div>
+                                            <div class="text-secondary small">Owner: John Doe</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mb-3 mb-md-0 text-md-center">
+                                    <div class="fw-bold">Today</div>
+                                    <div class="text-secondary small">10:30 AM</div>
+                                </div>
+                                <div class="col-md-2 mb-3 mb-md-0 text-md-center">
+                                    <span class="status-badge status-pending">Pending</span>
+                                </div>
+                                <div class="col-md-2 mb-3 mb-md-0">
+                                    Annual checkup
+                                </div>
+                                <div class="col-md-3 text-md-end">
+                                    <button class="btn btn-sm btn-success btn-confirm me-1 mb-1"><i class="fas fa-check me-1"></i>Confirm</button>
+                                    <button class="btn btn-sm btn-warning btn-reschedule me-1 mb-1"><i class="fas fa-clock me-1"></i>Reschedule</button>
+                                    <button class="btn btn-sm btn-danger btn-cancel mb-1"><i class="fas fa-times me-1"></i>Cancel</button>
+                                </div>
+                            </div>
+
+                            <!-- Appointment Item 2 -->
+                            <div class="row py-3 border-bottom align-items-center">
+                                <div class="col-md-3 mb-3 mb-md-0">
+                                    <div class="d-flex align-items-center">
+                                        <div class="pet-avatar me-3">
+                                            <img src="/api/placeholder/50/50" alt="Pet Image">
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold">Luna (Persian Cat)</div>
+                                            <div class="text-secondary small">Owner: Sarah Johnson</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mb-3 mb-md-0 text-md-center">
+                                    <div class="fw-bold">Today</div>
+                                    <div class="text-secondary small">2:15 PM</div>
+                                </div>
+                                <div class="col-md-2 mb-3 mb-md-0 text-md-center">
+                                    <span class="status-badge status-emergency">Emergency</span>
+                                </div>
+                                <div class="col-md-2 mb-3 mb-md-0">
+                                    Limping on front paw
+                                </div>
+                                <div class="col-md-3 text-md-end">
+                                    <button class="btn btn-sm btn-success btn-confirm me-1 mb-1"><i class="fas fa-check me-1"></i>Confirm</button>
+                                    <button class="btn btn-sm btn-warning btn-reschedule me-1 mb-1"><i class="fas fa-clock me-1"></i>Reschedule</button>
+                                    <button class="btn btn-sm btn-danger btn-cancel mb-1"><i class="fas fa-times me-1"></i>Cancel</button>
+                                </div>
+                            </div>
+
+                            <!-- Appointment Item 3 -->
+                            <div class="row py-3 align-items-center">
+                                <div class="col-md-3 mb-3 mb-md-0">
+                                    <div class="d-flex align-items-center">
+                                        <div class="pet-avatar me-3">
+                                            <img src="/api/placeholder/50/50" alt="Pet Image">
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold">Rocky (German Shepherd)</div>
+                                            <div class="text-secondary small">Owner: Mike Andrews</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mb-3 mb-md-0 text-md-center">
+                                    <div class="fw-bold">Tomorrow</div>
+                                    <div class="text-secondary small">9:00 AM</div>
+                                </div>
+                                <div class="col-md-2 mb-3 mb-md-0 text-md-center">
+                                    <span class="status-badge status-pending">Pending</span>
+                                </div>
+                                <div class="col-md-2 mb-3 mb-md-0">
+                                    Vaccination due
+                                </div>
+                                <div class="col-md-3 text-md-end">
+                                    <button class="btn btn-sm btn-success btn-confirm me-1 mb-1"><i class="fas fa-check me-1"></i>Confirm</button>
+                                    <button class="btn btn-sm btn-warning btn-reschedule me-1 mb-1"><i class="fas fa-clock me-1"></i>Reschedule</button>
+                                    <button class="btn btn-sm btn-danger btn-cancel mb-1"><i class="fas fa-times me-1"></i>Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Today's Schedule -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title pb-2 border-bottom mb-3">Today's Schedule</h5>
+
+                            <div class="row py-3 align-items-center">
+                                <div class="col-md-4 mb-3 mb-md-0">
+                                    <div class="d-flex align-items-center">
+                                        <div class="pet-avatar me-3">
+                                            <img src="/api/placeholder/50/50" alt="Pet Image">
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold">Bella (Poodle)</div>
+                                            <div class="text-secondary small">Owner: Lisa Parker</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mb-3 mb-md-0 text-md-center">
+                                    <div class="text-secondary">8:30 AM</div>
+                                    <div class="small">30 minutes</div>
+                                </div>
+                                <div class="col-md-3 mb-3 mb-md-0 text-md-center">
+                                    <span class="status-badge status-confirmed">Confirmed</span>
+                                </div>
+                                <div class="col-md-3">
+                                    Skin condition follow-up
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="card text-center mb-4">
+                        <div class="card-body py-3">
+                            <p class="text-secondary mb-0">&copy; 2025 VET WIZARD. All rights reserved.</p>
+                        </div>
+                    </div>
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Approval Modal -->
+    {% if show_modal %}
+<div class="custom-modal" id="approvalModal">
+    <div class="custom-modal-backdrop"></div>
+    <div class="custom-modal-dialog">
+        <div class="card border-0 shadow">
+            <div class="card-header bg-primary text-white text-center py-3">
+                <h5 class="card-title mb-0">Approval Pending</h5>
+            </div>
+            <div class="card-body text-center py-4">
+                <div class="status-icon">
+                    <i class="fas fa-hourglass-half"></i>
+                </div>
+                <h4 class="mb-3">Your account is pending admin approval.</h4>
+                <p class="text-secondary mb-4">We're reviewing your credentials. You'll have full access to the platform once approved.</p>
+                
+                <div class="mb-4">
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <p class="text-secondary small mt-2">Processing your application...</p>
+                </div>
+                
+                <a class="btn btn-primary px-4 py-2" href="{% url 'home' %}">I Understand</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Modal display script - without outside click closing
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            const modal = document.getElementById('approvalModal');
+            if (modal) {
+                modal.style.display = 'block';
+                
+                // No event listener for backdrop click
+                // The only way to close is via "I Understand" button
+            }
+        }, 500);
+    });
+</script>
+{% endif %}
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+        // Appointment action handlers
+        document.addEventListener('DOMContentLoaded', function () {
+            // Handle appointment confirmation
+            const confirmButtons = document.querySelectorAll('.btn-confirm');
+            confirmButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const appointmentRow = this.closest('.row');
+                    const statusBadge = appointmentRow.querySelector('.status-badge');
+                    statusBadge.className = 'status-badge status-confirmed';
+                    statusBadge.textContent = 'Confirmed';
+                    this.disabled = true;
+                    this.parentNode.querySelector('.btn-reschedule').disabled = true;
+                    this.parentNode.querySelector('.btn-cancel').disabled = true;
+                    alert('Appointment confirmed!');
+                });
+            });
+
+            // Handle appointment rescheduling
+            const rescheduleButtons = document.querySelectorAll('.btn-reschedule');
+            rescheduleButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    alert('Reschedule functionality will open a calendar modal.');
+                });
+            });
+
+            // Handle appointment cancellation
+            const cancelButtons = document.querySelectorAll('.btn-cancel');
+            cancelButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    if (confirm('Are you sure you want to cancel this appointment?')) {
+                        const appointmentRow = this.closest('.row');
+                        appointmentRow.style.opacity = '0.5';
+                        const statusBadge = appointmentRow.querySelector('.status-badge');
+                        statusBadge.className = 'status-badge';
+                        statusBadge.style.backgroundColor = '#6c757d';
+                        statusBadge.textContent = 'Cancelled';
+                        this.disabled = true;
+                        this.parentNode.querySelector('.btn-confirm').disabled = true;
+                        this.parentNode.querySelector('.btn-reschedule').disabled = true;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

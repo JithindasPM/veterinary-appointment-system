@@ -1,0 +1,462 @@
+{% extends 'doctor.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #f5f7fb;
+        font-family: 'Poppins', sans-serif;
+    }
+    
+    .page-header {
+        background: linear-gradient(135deg, #4776E6, #8E54E9);
+        color: white;
+        border-radius: 16px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 20px rgba(71, 118, 230, 0.15);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .page-header h2 {
+        font-weight: 700;
+        margin: 0;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .page-header p {
+        margin: 10px 0 0;
+        opacity: 0.9;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .page-header::after {
+        content: '';
+        position: absolute;
+        right: -20px;
+        bottom: -20px;
+        width: 200px;
+        height: 200px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        z-index: 1;
+    }
+    
+    .appointments-container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    
+    .appointment-card {
+        background: white;
+        border-radius: 16px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        border: none;
+        transition: all 0.3s ease;
+        border-left: 5px solid #4776E6;
+    }
+    
+    .appointment-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-header {
+        border-bottom: 1px solid #eaedf2;
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .patient-info {
+        display: flex;
+        align-items: center;
+    }
+    
+    .patient-avatar {
+        width: 50px;
+        height: 50px;
+        background-color: #e6eeff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        color: #4776E6;
+        font-size: 1.5rem;
+    }
+    
+    .patient-name {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #333;
+        margin: 0;
+    }
+    
+    .pet-info {
+        display: flex;
+        align-items: center;
+        background: #f8faff;
+        padding: 10px 15px;
+        border-radius: 12px;
+        margin-bottom: 15px;
+    }
+    
+    .pet-icon {
+        font-size: 1.2rem;
+        color: #4776E6;
+        margin-right: 10px;
+    }
+    
+    .pet-name {
+        font-weight: 500;
+        color: #4b5563;
+    }
+    
+    .appointment-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .detail-item {
+        display: flex;
+        align-items: center;
+    }
+    
+    .detail-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        background-color: #f0f5ff;
+        border-radius: 10px;
+        margin-right: 10px;
+        color: #4776E6;
+    }
+    
+    .detail-text {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .detail-label {
+        font-size: 0.8rem;
+        color: #6b7280;
+        margin-bottom: 2px;
+    }
+    
+    .detail-value {
+        font-weight: 500;
+        color: #374151;
+    }
+    
+    .reason-section {
+        background-color: #f9fafb;
+        padding: 15px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+    }
+    
+    .reason-label {
+        font-size: 0.9rem;
+        color: #6b7280;
+        margin-bottom: 5px;
+    }
+    
+    .reason-text {
+        color: #4b5563;
+    }
+    
+    .status-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eaedf2;
+    }
+    
+    .status-badges {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 15px;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+    
+    .status-badge i {
+        margin-right: 5px;
+    }
+    
+    .badge-approved {
+        background-color: #dcf5e7;
+        color: #0f766e;
+    }
+    
+    .badge-pending {
+        background-color: #fef5d3;
+        color: #92400e;
+    }
+    
+    .badge-paid {
+        background-color: #dbeafe;
+        color: #1e40af;
+    }
+    
+    .badge-not-paid {
+        background-color: #fee2e2;
+        color: #b91c1c;
+    }
+    
+    .time-badge {
+        background-color: #f3e8ff;
+        color: #7e22ce;
+    }
+    
+    .time-updated {
+        background-color: #ecfdf5;
+        color: #047857;
+        display: inline-flex;
+        align-items: center;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        margin-left: 10px;
+    }
+    
+    .actions-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    
+    @media (max-width: 768px) {
+        .actions-section {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    .action-form {
+        flex: 1;
+    }
+    
+    .time-form {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background-color: #f9fafb;
+        padding: 15px;
+        border-radius: 12px;
+    }
+    
+    .time-input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        outline: none;
+        transition: border-color 0.3s;
+    }
+    
+    .time-input:focus {
+        border-color: #4776E6;
+        box-shadow: 0 0 0 3px rgba(71, 118, 230, 0.1);
+    }
+    
+    .btn {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+    
+    .btn-success {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+    }
+    
+    .btn-danger {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #4776E6, #3b82f6);
+        color: white;
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .btn i {
+        margin-right: 8px;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 50px 20px;
+        background-color: white;
+        border-radius: 16px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    }
+    
+    .empty-icon {
+        font-size: 3rem;
+        color: #d1d5db;
+        margin-bottom: 20px;
+    }
+    
+    .empty-text {
+        color: #6b7280;
+        font-size: 1.1rem;
+        margin-bottom: 0;
+    }
+</style>
+
+<div class="container py-4">
+    <div class="page-header">
+        <h2>Your Patient Appointments</h2>
+        <p>Manage your schedule and patient appointments</p>
+    </div>
+
+    <div class="appointments-container">
+        {% if appointment %}
+            {% for a in appointment %}
+            <div class="appointment-card">
+                <div class="card-header">
+                    <div class="patient-info">
+                        <div class="patient-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h5 class="patient-name">{{ a.patient.username }}</h5>
+                    </div>
+                    
+                    <div class="status-badges">
+                        {% if a.is_confirmed %}
+                            <span class="status-badge badge-approved">
+                                <i class="fas fa-check-circle"></i> Approved
+                            </span>
+                        {% else %}
+                            <span class="status-badge badge-pending">
+                                <i class="fas fa-clock"></i> Pending
+                            </span>
+                        {% endif %}
+                        
+                        {% if a.is_paid %}
+                            <span class="status-badge badge-paid">
+                                <i class="fas fa-credit-card"></i> Paid
+                            </span>
+                        {% else %}
+                            <span class="status-badge badge-not-paid">
+                                <i class="fas fa-exclamation-circle"></i> Not Paid
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="pet-info">
+                    <span class="pet-icon"><i class="fas fa-paw"></i></span>
+                    <span class="pet-name">{{ a.pet.name }}</span>
+                </div>
+                
+                <div class="appointment-details">
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                        <div class="detail-text">
+                            <span class="detail-label">Appointment Date</span>
+                            <span class="detail-value">{{ a.appointment_date }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="detail-text">
+                            <span class="detail-label">Appointment Time</span>
+                            <span class="detail-value">
+                                {% if a.appointment_time %}
+                                    {{ a.appointment_time }}
+                                    {% if a.time_updated %}
+                                        <span class="time-updated">
+                                            <i class="fas fa-sync-alt"></i> Updated
+                                        </span>
+                                    {% endif %}
+                                {% else %}
+                                    Not set
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="reason-section">
+                    <div class="reason-label">Reason for Visit:</div>
+                    <div class="reason-text">{{ a.reason }}</div>
+                </div>
+                
+                <div class="actions-section">
+                    <form method="POST" action="{% url 'toggle_appointment_status' a.id %}" class="action-form">
+                        {% csrf_token %}
+                        {% if a.is_confirmed %}
+                            <button type="submit" class="btn btn-danger btn-block">
+                                <i class="fas fa-times-circle"></i> Cancel Approval
+                            </button>
+                        {% else %}
+                            <button type="submit" class="btn btn-success btn-block">
+                                <i class="fas fa-check-circle"></i> Approve Appointment
+                            </button>
+                        {% endif %}
+                    </form>
+                    
+                    <form method="POST" action="{% url 'set_appointment_time' a.id %}" class="time-form">
+                        {% csrf_token %}
+                        <input type="time" name="appointment_time" value="{{ a.appointment_time|default:'' }}" class="time-input" required>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-clock"></i> Update Time
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-calendar-times"></i>
+                </div>
+                <p class="empty-text">You don't have any appointments scheduled at this time.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- FontAwesome for icons -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+{% endblock %}

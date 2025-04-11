@@ -1,0 +1,379 @@
+{% extends 'user.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    body {
+        background: #f0f5ff;
+        font-family: 'Nunito', sans-serif;
+    }
+
+    .page-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+        position: relative;
+    }
+
+    .page-title {
+        font-weight: 800;
+        color: #3a57e8;
+        font-size: 2.2rem;
+        margin-bottom: 0.5rem;
+        display: inline-block;
+        position: relative;
+    }
+
+    .page-title:after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        height: 4px;
+        width: 70px;
+        background: linear-gradient(90deg, #3a57e8, #8395ff);
+        border-radius: 2px;
+    }
+
+    .appointments-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .appointment-card {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(58, 87, 232, 0.08);
+        padding: 25px 30px;
+        margin-bottom: 25px;
+        transition: all 0.3s ease;
+        border-left: 5px solid #3a57e8;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .appointment-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(58, 87, 232, 0.15);
+    }
+
+    .appointment-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: 5px;
+        background: linear-gradient(to bottom, #3a57e8, #8395ff);
+    }
+
+    .doctor-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .doctor-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: #e6ecff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        color: #3a57e8;
+        font-size: 1.3rem;
+    }
+
+    .doctor-name {
+        font-weight: 700;
+        color: #324e63;
+        margin: 0;
+        font-size: 1.2rem;
+    }
+
+    .appointment-details {
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: 65px;
+    }
+
+    .detail-item {
+        display: flex;
+        align-items: center;
+        margin-right: 25px;
+        margin-bottom: 15px;
+        color: #5a6a85;
+    }
+
+    .detail-icon {
+        background: #f0f5ff;
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+        color: #3a57e8;
+    }
+
+    .detail-text {
+        font-size: 0.9rem;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        margin-right: 4px;
+    }
+
+    .status-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-top: 5px;
+    }
+
+    .status-pills {
+        display: flex;
+        gap: 10px;
+    }
+
+    .status-pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .status-pill i {
+        margin-right: 6px;
+    }
+
+    .confirmed {
+        background-color: #e3f8e5;
+        color: #218838;
+    }
+
+    .pending {
+        background-color: #fff8e1;
+        color: #f59e0b;
+    }
+
+    .paid {
+        background-color: #e1f5fe;
+        color: #0288d1;
+    }
+
+    .not-paid {
+        background-color: #fce7eb;
+        color: #e53e3e;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border: none;
+    }
+
+    .btn-view {
+        background: linear-gradient(135deg, #3a57e8, #4e6ef9);
+        color: white;
+    }
+
+    .btn-pay {
+        background: linear-gradient(135deg, #28a745, #5dd879);
+        color: white;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        opacity: 0.95;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(58, 87, 232, 0.08);
+    }
+
+    .empty-icon {
+        font-size: 3.5rem;
+        color: #c9d6ff;
+        margin-bottom: 20px;
+    }
+
+    .empty-text {
+        color: #8a9aad;
+        font-size: 1.1rem;
+        margin-bottom: 25px;
+    }
+
+    .btn-new-appointment {
+        background: linear-gradient(135deg, #3a57e8, #4e6ef9);
+        color: white;
+        padding: 12px 30px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    @media (max-width: 768px) {
+        .status-container {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .status-pills {
+            margin-bottom: 15px;
+        }
+
+        .appointment-details {
+            margin-left: 0;
+        }
+
+        .doctor-info {
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+        }
+
+        .doctor-avatar {
+            margin-bottom: 10px;
+        }
+    }
+</style>
+
+<div class="container py-5">
+    <div class="page-header">
+        <h2 class="page-title">My Pet Appointments</h2>
+        <p class="text-muted">Manage your upcoming veterinary visits</p>
+    </div>
+
+    <div class="appointments-container">
+        {% if appointment %}
+        {% for a in appointment %}
+        <div class="appointment-card">
+            <div class="doctor-info">
+                <div class="doctor-avatar">
+                    <i class="fas fa-user-md"></i>
+                </div>
+                <h5 class="doctor-name">Dr. {{ a.doctor.full_name }}</h5>
+            </div>
+
+            <div class="appointment-details">
+                <div class="detail-item">
+                    <div class="detail-icon">
+                        <i class="fas fa-paw"></i>
+                    </div>
+                    <div class="detail-text">
+                        <span class="detail-label">Pet:</span> {{ a.pet.name }}
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="detail-text">
+                        <span class="detail-label">Date:</span> {{ a.appointment_date }}
+                    </div>
+                </div>
+
+                {% if a.appointment_time %}
+                <div class="detail-item">
+                    <div class="detail-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="detail-text">
+                        <span class="detail-label">Time:</span> {{ a.appointment_time|time:"h:i A" }}
+                    </div>
+                </div>
+                {% endif %}
+
+
+                <div class="detail-item">
+                    <div class="detail-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="detail-text">
+                        <span class="detail-label">Booked:</span> {{ a.created_at|date:"M d, Y" }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="status-container">
+                <div class="status-pills">
+                    <span class="status-pill {{ a.is_confirmed|yesno:'confirmed,pending' }}">
+                        <i class="fas fa-{{ a.is_confirmed|yesno:'check-circle,hourglass' }}"></i>
+                        {{ a.is_confirmed|yesno:"Confirmed,Awaiting Approval" }}
+                    </span>
+
+                    <span class="status-pill {{ a.is_paid|yesno:'paid,not-paid' }}">
+                        <i class="fas fa-{{ a.is_paid|yesno:'check-square,exclamation-circle' }}"></i>
+                        {{ a.is_paid|yesno:"Payment Complete,Payment Required" }}
+                    </span>
+                </div>
+
+                <div class="action-buttons">
+                    {% if not a.is_paid %}
+                    <a href="{% url 'create_payment' a.id %}" class="btn btn-pay">
+                        <i class="fas fa-credit-card"></i> Pay Now
+                    </a>
+                    {% else %}
+                    <p><strong>Paid Amount:</strong> ₹500</p>
+                    {% endif %}
+
+                    {% if not a.is_confirmed %}
+                    <form method="post" action="{% url 'appointment_delete' a.id %}" style="display: inline;"
+                        onsubmit="return confirm('Are you sure you want to cancel this appointment?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-delete">
+                            <i class="fas fa-trash-alt"></i> Cancel
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-calendar-times"></i>
+            </div>
+            <p class="empty-text">You haven't booked any appointments yet.</p>
+            <a href="{% url 'book_appointment' %}" class="btn btn-new-appointment">
+                <i class="fas fa-plus-circle"></i> Book Your First Appointment
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<!-- FontAwesome for icons -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+{% endblock %}

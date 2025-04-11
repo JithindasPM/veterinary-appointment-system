@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Doctor Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, #d9afd9, #97d9e1);
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .card {
+            border-radius: 20px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+            background-color: #fff;
+        }
+        .form-label {
+            font-weight: 600;
+        }
+        .form-control {
+            border-radius: 12px;
+        }
+        .btn-primary {
+            border-radius: 12px;
+            background-color: #0077b6;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #023e8a;
+        }
+        .preview-img {
+            max-width: 150px;
+            height: auto;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+        .profile-top-img {
+            max-width: 180px;
+            height: auto;
+            border-radius: 15px;
+            margin: 0 auto 20px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card p-4">
+                <h2 class="text-center mb-4">Update Doctor Profile</h2>
+
+                {% if form.instance.profile_picture %}
+                    <img src="{{ form.instance.profile_picture.url }}" alt="Profile Picture"
+                         class="profile-top-img">
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
+                        {% for field in form %}
+                            {% if field.name == "address" or field.name == "profile_picture" %}
+                                <div class="mb-3 col-md-12">
+                            {% else %}
+                                <div class="mb-3 col-md-6">
+                            {% endif %}
+                                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                    {{ field }}
+                                    {% if field.help_text %}
+                                        <div class="form-text">{{ field.help_text }}</div>
+                                    {% endif %}
+                                    {% for error in field.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                    {% if field.name == 'profile_picture' %}
+                                        <img id="imgPreview" class="preview-img d-block" style="display: none;">
+                                    {% endif %}
+                                </div>
+                        {% endfor %}
+                    </div>
+                    <div class="d-grid mt-3">
+                        <button type="submit" class="btn btn-primary btn-lg">Save Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const imageInput = document.getElementById('id_profile_picture');
+    const preview = document.getElementById('imgPreview');
+
+    if (imageInput) {
+        imageInput.addEventListener('change', function () {
+            const file = this.files[0];
+            if (file) {
+                preview.src = URL.createObjectURL(file);
+                preview.style.display = 'block';
+            }
+        });
+    }
+</script>
+{% if messages %}
+<script>
+  window.onload = function() {
+    {% for message in messages %}
+      alert("{{ message }}");
+    {% endfor %}
+  };
+</script>
+{% endif %}
+</body>
+</html>

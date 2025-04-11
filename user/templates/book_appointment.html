@@ -1,0 +1,91 @@
+{% extends 'user.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .main{
+        height: 93vh;
+        padding-top: 100px;
+        background-image: linear-gradient(to right, rgba(0,0,0,0.5), rgba(0,0,0,0.2)), 
+                      url('/media/bg/booking_bg.webp');
+         background-size: cover;
+         background-position: center;
+    }
+    .card {
+        backdrop-filter: blur(3px);
+        background-color: rgba(255, 255, 255, 0.159); 
+        border-radius: 15px;
+    }    
+    .btn1{
+        color: white;
+        background-color: rgba(20, 20, 20, 0.158);
+        border: 1px solid rgba(0, 0, 0, 0.421);
+    }
+    .btn1:hover{
+        color: white;
+        text-shadow: 0 0 1px;
+        background-color: rgba(40, 35, 35, 0.136);
+        border: 1px solid rgba(255, 255, 255, 0.642);
+    }
+</style>
+<div class="container main">
+    <div class="row">
+        <div class="col-8">
+            <div class="card shadow-lg border-0 rounded-4 mx-auto" style="max-width: 720px;">
+                <div class="card-body p-5">
+                    <h3 class="text-center mb-4 fw-bold text-light">Book Appointment:with Dr. {{ doctor.full_name }} </h3>
+                    
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        <div class="row g-4 text-light">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold"><b>{{ form.appointment_date.label }}</b></label>
+                                {{ form.appointment_date }}
+                                {% if form.appointment_date.errors %}
+                                    <div class="text-danger small mt-1">{{ form.appointment_date.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold"><b>{{ form.pet.label }}</b></label>
+                                {{ form.pet }}
+                                {% if form.pet.errors %}
+                                    <div class="text-danger small mt-1">{{ form.pet.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold"><b>{{ form.reason.label }}</b></label>
+                                {{ form.reason }}
+                                {% if form.reason.errors %}
+                                    <div class="text-danger small mt-1">{{ form.reason.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+        
+                        <div class="text-end mt-4">
+                            <button type="submit" class="btn btn1 btn-lg px-4 form-control">
+                                <i class="fas fa-calendar-check me-2"></i>Book Appointment
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-4"></div>
+    </div>
+</div>
+
+<!-- Optional FontAwesome (if not already in user.html) -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+<script>
+    // Set minimum date to today
+    document.addEventListener('DOMContentLoaded', function () {
+        const dateInput = document.querySelector('input[type="date"]');
+        if (dateInput) {
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.setAttribute('min', today);
+        }
+    });
+</script>
+
+{% endblock %}

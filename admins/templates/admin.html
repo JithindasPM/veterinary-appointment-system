@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <title>VET WIZARD - Admin Dashboard</title>
+    <style>
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #6bc4a6;
+            --accent: #ff9642;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --danger: #dc3545;
+            --success: #28a745;
+            --warning: #ffc107;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: #333;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary);
+            color: white;
+            padding: 20px 0;
+            transition: all 0.3s;
+        }
+        
+        .brand {
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .brand-logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .nav-menu {
+            list-style: none;
+        }
+        
+        .nav-item {
+            padding: 12px 25px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .dashboard-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .stat-card {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card .icon {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 24px;
+            opacity: 0.2;
+        }
+        
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .stat-title {
+            color: #777;
+            font-size: 14px;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3a5a84;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5aa38a;
+        }
+        
+        .btn-accent {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .btn-accent:hover {
+            background-color: #e88735;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        tbody tr:hover {
+            background-color: #f5f7fb;
+        }
+        
+        .badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background-color: #e6f7ee;
+            color: var(--success);
+        }
+        
+        .badge-warning {
+            background-color: #fff8e6;
+            color: var(--warning);
+        }
+        
+        .badge-danger {
+            background-color: #fce8ea;
+            color: var(--danger);
+        }
+        
+        .action-btn {
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+        
+        .action-btn-view {
+            background-color: #e6f0ff;
+            color: #0066cc;
+        }
+        
+        .action-btn-edit {
+            background-color: #fff8e6;
+            color: #cc8800;
+        }
+        
+        .action-btn-delete {
+            background-color: #fce8ea;
+            color: #cc0022;
+        }
+        
+        .feedback-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .feedback-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .feedback-item:last-child {
+            border-bottom: none;
+        }
+        
+        .feedback-user {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .feedback-date {
+            font-size: 12px;
+            color: #777;
+            margin-bottom: 10px;
+        }
+        
+        .feedback-text {
+            line-height: 1.5;
+        }
+        
+        .chart-container {
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .link_a{
+            text-decoration: none;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 10px 0;
+            }
+            
+            .dashboard-overview {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <div class="brand">
+                <a class="link_a" href="{% url 'home' %}"><div class="brand-logo">VET WIZARD</div></a>
+            </div>
+            <ul class="nav-menu">
+                <a class="link_a" href="{% url 'admin' %}">
+                <li class="nav-item active">
+                    <span>📊 Dashboard</span>
+                </li>
+            </a>
+                <li class="nav-item">
+                    <span>🏪 Manage Shop</span>
+                </li>
+                <a class="link_a" href="{% url 'all_doctor_admin' %}">
+                <li class="nav-item">
+                    <span>👨‍⚕️ View Doctors</span>
+                </li>
+            </a>
+                <li class="nav-item">
+                    <span>📝 View Feedback</span>
+                </li>
+                <li class="nav-item">
+                    <span>📦 Products</span>
+                </li>
+                <a class="link_a" href="{% url 'all_users' %}">
+                <li class="nav-item">
+                    <span>👥 Users</span>
+                </li></a>
+                <li class="nav-item">
+                    <span>⚙️ Settings</span>
+                </li>
+                <a class="link_a" href="{% url 'logout' %}">
+                <li class="nav-item">
+                    <span>🚪 Logout</span>
+                </li>
+            </a>
+            </ul>
+        </div>
+        
+        <div class="main-content">
+            {% block content %}
+            <div class="header">
+                <h1>Admin Dashboard</h1>
+                <div class="user-profile">
+                    <div class="user-avatar">A</div>
+                    <div class="user-info">
+                        <div class="user-name">Admin</div>
+                        <div class="user-role">System Administrator</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dashboard-overview">
+                <div class="card stat-card">
+                    <div class="icon">👥</div>
+                    <div class="stat-title">Total Users</div>
+                    <div class="stat-number">248</div>
+                    <div class="stat-trend">+12% this week</div>
+                </div>
+                
+                <div class="card stat-card">
+                    <div class="icon">👨‍⚕️</div>
+                    <div class="stat-title">Active Doctors</div>
+                    <div class="stat-number">32</div>
+                    <div class="stat-trend">+3 this month</div>
+                </div>
+                
+                <div class="card stat-card">
+                    <div class="icon">📦</div>
+                    <div class="stat-title">Products in Stock</div>
+                    <div class="stat-number">156</div>
+                    <div class="stat-trend">12 low stock</div>
+                </div>
+                
+                <div class="card stat-card">
+                    <div class="icon">💰</div>
+                    <div class="stat-title">Revenue (This Month)</div>
+                    <div class="stat-number">$5,842</div>
+                    <div class="stat-trend">+18% vs last month</div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Doctor Management</div>
+                        <div class="card-actions">
+                            <button class="btn btn-accent">Add New Doctor</button>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Specialization</th>
+                                <th>Status</th>
+                                <th>Appointments</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>D001</td>
+                                <td>Dr. Sarah Johnson</td>
+                                <td>Small Animals</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>24 this week</td>
+                                <td>
+                                    <button class="action-btn action-btn-view">View</button>
+                                    <button class="action-btn action-btn-edit">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>D002</td>
+                                <td>Dr. Michael Lee</td>
+                                <td>Large Animals</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>18 this week</td>
+                                <td>
+                                    <button class="action-btn action-btn-view">View</button>
+                                    <button class="action-btn action-btn-edit">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>D003</td>
+                                <td>Dr. Emily Chen</td>
+                                <td>Exotic Animals</td>
+                                <td><span class="badge badge-warning">On Leave</span></td>
+                                <td>0 this week</td>
+                                <td>
+                                    <button class="action-btn action-btn-view">View</button>
+                                    <button class="action-btn action-btn-edit">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>D004</td>
+                                <td>Dr. James Wilson</td>
+                                <td>Birds</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>12 this week</td>
+                                <td>
+                                    <button class="action-btn action-btn-view">View</button>
+                                    <button class="action-btn action-btn-edit">Edit</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px;" class="row">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Shop Management</div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary">View Shop Stats</button>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product ID</th>
+                                <th>Product Name</th>
+                                <th>Category</th>
+                                <th>Stock</th>
+                                <th>Price</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>P001</td>
+                                <td>Premium Cat Food (5kg)</td>
+                                <td>Pet Food</td>
+                                <td>32</td>
+                                <td>$24.99</td>
+                                <td>
+                                    <button class="action-btn action-btn-view">View</button>
+                                    <button class="action-btn action-btn-edit">Edit</button>
+                                    <button class="action-btn action-btn-delete">Delete</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>P002</td>
+                                <td>Dog Collar (Medium)</td>
+                                <td>Accessories</td>
+                                <td>18</td>
+                                <td>$12.50</td>
+                                <td>
+                                    <button class="action-btn action-btn-view">View</button>
+                                    <button class="action-btn action-btn-edit">Edit</button>
+                                    <button class="action-btn action-btn-delete">Delete</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>P003</td>
+                                <td>Pet Multivitamins (60 tabs)</td>
+                                <td>Healthcare</td>
+                                <td>8</td>
+                                <td>$19.95</td>
+                                <td>
+                                    <button class="action-btn action-btn-view">View</button>
+                                    <button class="action-btn action-btn-edit">Edit</button>
+                                    <button class="action-btn action-btn-delete">Delete</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>P004</td>
+                                <td>Bird Cage (Standard)</td>
+                                <td>Housing</td>
+                                <td>5</td>
+                                <td>$49.99</td>
+                                <td>
+                                    <button class="action-btn action-btn-view">View</button>
+                                    <button class="action-btn action-btn-edit">Edit</button>
+                                    <button class="action-btn action-btn-delete">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Recent Feedback</div>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary">View All</button>
+                        </div>
+                    </div>
+                    <div class="feedback-list">
+                        <div class="feedback-item">
+                            <div class="feedback-user">John Smith</div>
+                            <div class="feedback-date">April 8, 2025</div>
+                            <div class="feedback-text">The appointment scheduling system works great! Very intuitive and easy to use.</div>
+                        </div>
+                        <div class="feedback-item">
+                            <div class="feedback-user">Emma Davis</div>
+                            <div class="feedback-date">April 7, 2025</div>
+                            <div class="feedback-text">Dr. Johnson was amazing with my cat. The app made it so easy to find the right specialist.</div>
+                        </div>
+                        <div class="feedback-item">
+                            <div class="feedback-user">Robert Kim</div>
+                            <div class="feedback-date">April 6, 2025</div>
+                            <div class="feedback-text">Could you add more payment options to the shop? Otherwise, everything works perfectly!</div>
+                        </div>
+                        <div class="feedback-item">
+                            <div class="feedback-user">Lisa Wang</div>
+                            <div class="feedback-date">April 5, 2025</div>
+                            <div class="feedback-text">Had an issue with the notifications not coming through properly. Please look into this.</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Monthly Revenue</div>
+                    </div>
+                    <div class="chart-container">
+                        <img src="/api/placeholder/400/300" alt="Revenue Chart Placeholder">
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+        </div>
+    </div>
+</body>
+</html>

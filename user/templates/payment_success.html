@@ -1,0 +1,58 @@
+{% extends 'user.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .success-wrapper {
+        min-height: 80vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background: #f0f9ff;
+    }
+    .success-box {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    .success-icon {
+        font-size: 60px;
+        color: #28a745;
+        margin-bottom: 20px;
+    }
+    .success-message {
+        font-size: 24px;
+        font-weight: 600;
+        color: #333;
+    }
+    .go-back-btn {
+        margin-top: 25px;
+        padding: 10px 25px;
+        font-size: 16px;
+        border-radius: 30px;
+    }
+</style>
+
+<div class="success-wrapper">
+    <div class="success-box">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="success-message">
+            Payment Successful!
+        </div>
+        <p class="text-muted mt-2">Your appointment has been confirmed and payment is complete.</p>
+        <p><strong>Paid Amount:</strong> ₹500</p>
+
+
+        <a href="{% url 'user' %}" class="btn btn-success go-back-btn">
+            <i class="fas fa-arrow-left me-2"></i> Go to Dashboard
+        </a>
+    </div>
+</div>
+
+<!-- FontAwesome (if not already loaded) -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+{% endblock %}

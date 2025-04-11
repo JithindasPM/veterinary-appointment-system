@@ -1,0 +1,14 @@
+<form action="{% url 'create_payment' appointment.id %}" method="POST">
+    {% csrf_token %}
+    <script
+        src="https://checkout.razorpay.com/v1/checkout.js"
+        data-key="{{ razorpay_key }}"
+        data-amount="{{ amount }}"
+        data-currency="INR"
+        data-order_id="{{ payment.id }}"
+        data-buttontext="Pay ₹500"
+        data-name="VetCare"
+        data-description="Doctor Appointment"
+        data-theme.color="#0a9396">
+    </script>
+</form>

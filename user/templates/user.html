@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <title>VET WIZARD - Pet Owner Dashboard</title>
+    <style>
+        :root {
+            --primary: #8e44ad;
+            --secondary: #3498db;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --success: #2ecc71;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: var(--dark);
+            color: white;
+            padding-top: 20px;
+            height: 100vh;
+            position: fixed;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .sidebar-header h2 {
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .sidebar-header p {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        .sidebar-menu {
+            margin-top: 30px;
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            transition: 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 3px solid var(--primary);
+        }
+
+        .sidebar-menu i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        /* Pet Cards */
+        .pet-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            height: 100%;
+        }
+
+        .pet-image {
+            height: 150px;
+            overflow: hidden;
+        }
+
+        .pet-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .action-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: white;
+            font-size: 24px;
+        }
+
+        .action-appointment {
+            background-color: var(--primary);
+        }
+
+        .action-shop {
+            background-color: var(--secondary);
+        }
+
+        .action-emergency {
+            background-color: var(--danger);
+        }
+
+        .action-chat {
+            background-color: var(--success);
+        }
+
+        /* Appointments and Orders */
+        .appointment-icon, .order-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .appointment-icon {
+            background-color: var(--primary);
+        }
+
+        .order-icon {
+            background-color: var(--secondary);
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: white;
+        }
+
+        .status-pending {
+            background-color: var(--warning);
+        }
+
+        .status-confirmed {
+            background-color: var(--success);
+        }
+
+        .status-completed, .status-delivered {
+            background-color: var(--secondary);
+        }
+
+        .status-processing {
+            background-color: var(--warning);
+        }
+
+        .action-card {
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+        }
+        .modal-content{
+            width: 800px;
+            height: min-content;
+        }
+        .modal-body{
+            padding: 50px;
+        }
+
+        /* Modal styles */
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .modal-title {
+            font-weight: 600;
+            color: white;
+        }
+
+        /* Media Queries */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+            }
+
+            .sidebar-header h2, .sidebar-header p, .sidebar-menu a span {
+                display: none;
+            }
+
+            .sidebar-menu a {
+                text-align: center;
+                padding: 12px 0;
+            }
+
+            .sidebar-menu i {
+                margin-right: 0;
+                font-size: 20px;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+        }
+        .link_a{
+            text-decoration: none;
+            color: black;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <a style="text-decoration: none;" href="{% url 'home' %}">
+                    <h2>VET WIZARD</h2>
+                </a>
+                <p>Pet Owner Portal</p>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="{% url 'user' %}" class="active"><i class="fas fa-th-large"></i> <span>Dashboard</span></a></li>
+                <li><a href="{% url 'user_profile_update' %}"><i class="fas fa-user"></i> <span>My Profile</span></a></li>
+                <li><a href="#"><i class="fas fa-paw"></i> <span>My Pets</span></a></li>
+                <li><a href="{% url 'all_appointment' %}"><i class="fas fa-calendar-alt"></i> <span>Appointments</span></a></li>
+                <li><a href="{% url 'all_doctor' %}"><i class="fas fa-stethoscope"></i> <span>Find Doctor</span></a></li>
+                <li><a href="{% url 'shop' %}"><i class="fas fa-shopping-cart"></i> <span>Shop</span></a></li>
+                <li><a href="#"><i class="fas fa-box"></i> <span>My Orders</span></a></li>
+                <li><a href="#"><i class="fas fa-comment-alt"></i> <span>Send Feedback</span></a></li>
+                <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="container main-content">
+            {% block content %}
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="card-title">Welcome back, {{request.user}}!</h2>
+                        <p class="card-text text-muted">Here's what's new with your pets</p>
+                    </div>
+                    <div>
+                        <a class="btn btn-outline-danger" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <a class="link_a" href="{% url 'all_doctor' %}">
+                    <div class="card border-0 shadow-sm h-100 action-card">
+                        <div class="card-body text-center">
+                            <div class="action-icon action-appointment">
+                                <i class="fas fa-calendar-plus"></i>
+                            </div>
+                            <h5 class="card-title">Book Appointment</h5>
+                            <p class="card-text text-muted">Schedule a visit with our vets</p>
+                        </div>
+                    </div></a>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm h-100 action-card">
+                        <div class="card-body text-center">
+                            <div class="action-icon action-shop">
+                                <i class="fas fa-shopping-bag"></i>
+                            </div>
+                            <h5 class="card-title">Shop Products</h5>
+                            <p class="card-text text-muted">Food, toys, and accessories</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm h-100 action-card">
+                        <div class="card-body text-center">
+                            <div class="action-icon action-emergency">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <h5 class="card-title">Emergency Help</h5>
+                            <p class="card-text text-muted">Get immediate assistance</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm h-100 action-card">
+                        <div class="card-body text-center">
+                            <div class="action-icon action-chat">
+                                <i class="fas fa-comment-medical"></i>
+                            </div>
+                            <h5 class="card-title">Chat with Vet</h5>
+                            <p class="card-text text-muted">Quick consultation</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pet Profiles -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                    <h5 class="mb-0">My Pets</h5>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPetModal">
+                        <i class="fas fa-plus me-2"></i> Add New Pet
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% if pets %}
+                        {% for pet in pets %}
+                        <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                            <div class="pet-card">
+                                <div class="pet-image">
+                                    {% if pet.pet_picture %}
+                                    <img src="{{ pet.pet_picture.url }}" alt="{{ pet.name }}" class="img-fluid">
+                                    {% else %}
+                                    <img src="" alt="{{ pet.name }}" class="img-fluid">
+                                    {% endif %}
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ pet.name }}</h5>
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <span class="text-muted">{{ pet.breed }}</span>
+                                        <span class="text-muted">Age: {{ pet.age }} years</span>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <a class="btn btn-sm btn-primary flex-grow-1" href="{% url 'update_pet' pet.id %}" class="btn btn-edit">Edit </a>
+                                        <button class="btn btn-sm btn-warning flex-grow-1"> Records</button>
+                                        <a class="btn btn-sm btn-primary flex-grow-1" href="{% url 'pet_delete' pet.id %}">Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <div class="col-12">
+                            <div class="alert alert-info text-center py-5" role="alert">
+                                No pets added yet. Click "Add New Pet" to get started.
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal for adding a new pet -->
+            <div class="modal fade" id="addPetModal" tabindex="-1" aria-labelledby="addPetModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addPetModalLabel">Add New Pet</h5>
+                                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    {% for field in form %}
+                                    <div class="mb-3 col-md-6">
+                                        {{ field }}
+                                        {% if field.errors %}
+                                        {% for error in field.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <i class="fas fa-times me-1"></i> Cancel
+                                </button>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-save me-1"></i> Save Pet
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Appointments -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">Upcoming Appointments</h5>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item p-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <div class="appointment-icon me-3">
+                                        <i class="fas fa-calendar-check"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Buddy - Annual Checkup</h6>
+                                        <p class="text-muted mb-0">Dr. Sarah Johnson - Wellness Clinic</p>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <span class="status-badge status-confirmed">Confirmed</span>
+                                </div>
+                                <div class="text-end">
+                                    <div class="fw-bold">Apr 12, 2025</div>
+                                    <div class="text-muted">10:30 AM</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item p-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <div class="appointment-icon me-3">
+                                        <i class="fas fa-calendar-check"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Rex - Dental Cleaning</h6>
+                                        <p class="text-muted mb-0">Dr. Smith - Pet Dental Clinic</p>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <span class="status-badge status-confirmed">Confirmed</span>
+                                </div>
+                                <div class="text-end">
+                                    <div class="fw-bold">Apr 24, 2025</div>
+                                    <div class="text-muted">11:00 AM</div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Recent Orders -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">Recent Orders</h5>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item p-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <div class="order-icon me-3">
+                                        <i class="fas fa-box"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Premium Dog Food (10kg)</h6>
+                                        <p class="text-muted mb-0">Order #VW-85423</p>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <span class="status-badge status-delivered">Delivered</span>
+                                </div>
+                                <div class="fw-bold">
+                                    $45.99
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item p-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <div class="order-icon me-3">
+                                        <i class="fas fa-box"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Dog Vitamins (60 tablets)</h6>
+                                        <p class="text-muted mb-0">Order #VW-86012</p>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <span class="status-badge status-processing">Processing</span>
+                                </div>
+                                <div class="fw-bold">
+                                    $32.75
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="bg-white rounded shadow p-4 mb-4">
+                <div class="text-center text-muted">
+                    <p class="mb-0">&copy; 2025 VET WIZARD. All rights reserved.</p>
+                </div>
+            </footer>
+            {% endblock %}
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Bootstrap tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
+
+            // Handle quick action cards
+            const actionCards = document.querySelectorAll('.action-card');
+            actionCards.forEach(card => {
+                card.addEventListener('click', function () {
+                    const actionType = this.querySelector('.card-title').textContent;
+                    switch (actionType) {
+                        case 'Book Appointment':
+                            window.location.href = '#'; // Change to actual URL
+                            break;
+                        case 'Shop Products':
+                            window.location.href = "{% url 'shop' %}";
+                            break;
+                        case 'Emergency Help':
+                            // Show emergency contact modal or redirect
+                            alert('Connecting to emergency services...');
+                            break;
+                        case 'Chat with Vet':
+                            // Open chat interface
+                            alert('Opening vet chat window...');
+                            break;
+                    }
+                });
+            });
+        
+        });
+    </script>
+</body>
+
+</html>
