@@ -4,17 +4,18 @@
 {% block content %}
 <!-- Doctor Listing Section -->
  
-
-
-<div class="page-header">
-    <div class="welcome">
-        <h2>Welcome back, {{request.user}} !</h2>
-        <p>Here's what's new with your pets</p>
-    </div>
-    <div class="user-info">
-        <a class="btn btn-outline-dark" href="{% url 'logout' %}">Logout</a>
+<div class="d-flex justify-content-between align-items-center pb-3 mb-4 border-bottom">
+    <h1>Admin Dashboard</h1>
+    <div class="d-flex align-items-center gap-3">
+        <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center text-white fw-bold" style="width: 40px; height: 40px;">A</div>
+        <div>
+            <div class="fw-bold">Admin</div>
+            <div class="text-muted small">System Administrator</div>
+        </div>
     </div>
 </div>
+
+
 
 <div class="doctors-container">
     {% for doctor in doctors %}

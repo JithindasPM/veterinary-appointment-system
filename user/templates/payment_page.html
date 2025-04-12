@@ -1,14 +1,45 @@
-<form action="{% url 'create_payment' appointment.id %}" method="POST">
-    {% csrf_token %}
-    <script
-        src="https://checkout.razorpay.com/v1/checkout.js"
-        data-key="{{ razorpay_key }}"
-        data-amount="{{ amount }}"
-        data-currency="INR"
-        data-order_id="{{ payment.id }}"
-        data-buttontext="Pay ₹500"
-        data-name="VetCare"
-        data-description="Doctor Appointment"
-        data-theme.color="#0a9396">
-    </script>
-</form>
+{% extends 'user.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .main {
+        background-image: url('/media/bg/payment_bg.avif');
+        background-position: center;
+        background-size: cover;
+        height: 95vh;
+        border-radius: 7px;
+    }
+</style>
+
+<div class="container d-flex justify-content-center align-items-center main" style="min-height: 80vh;">
+    <div class="card shadow-lg p-5" style="max-width: 500px; width: 100%; border-radius: 20px;">
+        <div class="card-body text-center">
+            <img src="/media/bg/payment_icon.png" alt="Payment Icon" class="mb-3" style="width: 70px;">
+            
+            <h3 class="mb-2" style="color: #0a9396;">Confirm Your Appointment</h3>
+            <p class="text-muted">Proceed to pay ₹500 to secure your doctor's appointment.</p>
+
+            <form action="{% url 'create_payment' appointment.id %}" method="POST">
+                {% csrf_token %}
+                <!-- Do NOT wrap the script tag in a block element like <div> -->
+                <script
+                    src="https://checkout.razorpay.com/v1/checkout.js"
+                    data-key="{{ razorpay_key }}"
+                    data-amount="{{ amount }}"
+                    data-currency="INR"
+                    data-order_id="{{ payment.id }}"
+                    data-buttontext="Pay ₹500"
+                    data-name="VetCare"
+                    data-description="Doctor Appointment"
+                    data-theme.color="#0a9396">
+                </script>
+            </form>
+
+            <p class="mt-4 text-muted" style="font-size: 0.85rem;">
+                Your payment is secure and encrypted. Powered by Razorpay.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

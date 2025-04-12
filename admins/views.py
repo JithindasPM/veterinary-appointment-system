@@ -4,11 +4,13 @@ from django.contrib.auth import login,authenticate,logout
 from .forms import CustomUserCreationForm
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
+from django.core.paginator import Paginator
 
 
 from doctor.models import Doctor_Profile
 from user.models import PetOwner_Profile
-from .models import User
+from user.models import Doctor_Appointment
+from admins.models import User
 
 class Home_View(View):
     def get(self,request):
@@ -185,3 +187,12 @@ class Groq_View(View):
             'form': form, 
             'chat_history': chat_history
         })
+        
+class All_Booking_Admin_View(View):
+    def get(self, request):
+        paid_appointments = Doctor_Appointment.objects.filter(is_paid=True).order_by('-created_at')
+        paginator = Paginator(paid_appointments, 10)  # Show 5 per page
+        page_number = request.GET.get('page')
+        paid_appointments = paginator.get_page(page_number)
+
+        return render(request, 'all_bookind_admin.html', {'paid_appointments': paid_appointments})

@@ -8,6 +8,7 @@ from admins.views import All_Doctor_Admin_View
 from admins.views import Toggle_Doctor_Approval_View
 from admins.views import All_Users_View
 from admins.views import Groq_View
+from admins.views import All_Booking_Admin_View
 
 
 urlpatterns = [
@@ -20,5 +21,6 @@ urlpatterns = [
     path('toggle-approval/<int:doctor_id>/', Toggle_Doctor_Approval_View.as_view(), name='toggle_doctor_approval'),
     path('all_users/', All_Users_View.as_view(), name='all_users'),
     path("chatbot/", Groq_View.as_view(), name="chatbot"),
+    path("all_booking_admin/", All_Booking_Admin_View.as_view(), name="all_booking_admin"),
     
 ]

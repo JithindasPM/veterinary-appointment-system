@@ -336,13 +336,13 @@
                 </div>
 
                 <div class="action-buttons">
-                    {% if not a.is_paid %}
-                    <a href="{% url 'create_payment' a.id %}" class="btn btn-pay">
-                        <i class="fas fa-credit-card"></i> Pay Now
-                    </a>
-                    {% else %}
-                    <p><strong>Paid Amount:</strong> ₹500</p>
-                    {% endif %}
+                    {% if a.is_confirmed and not a.is_paid %}
+    <a href="{% url 'create_payment' a.id %}" class="btn btn-pay">
+        <i class="fas fa-credit-card"></i> Pay Now
+    </a>
+{% elif a.is_paid %}
+    <p><strong>Paid Amount:</strong> ₹{{ a.amount|default:"500" }}</p>
+{% endif %}
 
                     {% if not a.is_confirmed %}
                     <form method="post" action="{% url 'appointment_delete' a.id %}" style="display: inline;"
