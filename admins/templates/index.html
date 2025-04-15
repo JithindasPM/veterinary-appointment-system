@@ -128,7 +128,9 @@
             align-items: center;
             justify-content: space-between;
             padding: 7rem 5% 5rem;
-            background: linear-gradient(135deg, #F5F7FA 0%, #E4E7EC 100%);
+            background-image: url('/media/bg/index_main.jpg');
+            background-size: cover;
+            background-position: center;
             min-height: 90vh;
             padding-top: 200px;
         }
@@ -146,12 +148,15 @@
         
         .highlight {
             color: var(--primary);
+            color: white;
+            text-shadow: 0 0 1px;
         }
         
         .hero p {
             font-size: 1.1rem;
             line-height: 1.6;
             color: var(--gray);
+            color: white;
             margin-bottom: 2rem;
         }
         
@@ -159,6 +164,14 @@
             display: flex;
             gap: 1rem;
             margin-bottom: 2rem;
+        }
+        .btn1{
+            border: 1px solid rgba(0, 0, 0, 0.688);
+            color: rgba(0, 0, 0, 0.571);
+        }
+        .btn1:hover{
+            border: 1px solid rgb(0, 0, 0);
+            color: rgb(0, 0, 0);
         }
         
         .hero-image {
@@ -606,16 +619,13 @@
     <section class="hero">
         <div class="hero-content">
             <h1>Complete <span class="highlight">Veterinary Care</span> At Your Fingertips</h1>
-            <p>VET WIZARD connects pet owners with veterinarians and pet supplies in one comprehensive platform. Manage appointments, shop for pet supplies, and get expert advice - all in one place.</p>
+            <p >VET WIZARD connects pet owners with veterinarians and pet supplies in one comprehensive platform. Manage appointments, shop for pet supplies, and get expert advice - all in one place.</p>
             <div class="hero-buttons">
-                <button class="btn btn-primary">Get Started</button>
-                <a style="text-decoration: none;" class="btn btn-outline" id="features" href="#features">Learn More</a>
+                <a class="btn btn-dark" href="{% url 'login' %}">Get Started</a>
+                <a style="text-decoration: none;" class="btn btn1" id="features" href="#features">Learn More</a>
             </div>
             <div class="stats">
             </div>
-        </div>
-        <div class="hero-image">
-            <img src="/api/placeholder/600/400" alt="Veterinarian with pet">
         </div>
     </section>
 
@@ -639,13 +649,13 @@
                 <h3>One-Stop Pet Shop</h3>
                 <p>Browse and purchase a wide range of pet supplies, medications, and accessories directly from the app.</p>
             </div>
-            <div class="feature-card">
+            <!-- <div class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-comments"></i>
                 </div>
                 <h3>Direct Communication</h3>
                 <p>Connect directly with veterinarians for advice, consultations, and emergency guidance.</p>
-            </div>
+            </div> -->
             <div class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-paw"></i>
@@ -653,13 +663,13 @@
                 <h3>Pet Profile Management</h3>
                 <p>Create and manage detailed profiles for all your pets, including medical history and vaccination records.</p>
             </div>
-            <div class="feature-card">
+            <!-- <div class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-bell"></i>
                 </div>
-                <h3>Reminders & Notifications</h3>
-                <p>Receive timely reminders for vaccinations, medications, and upcoming appointments.</p>
-            </div>
+                <h3>Notifications</h3>
+                <p>Receive timely notifications for your doctor appointments and product bookings etc.</p>
+            </div> -->
             <div class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-robot"></i>
@@ -678,42 +688,29 @@
         <div class="user-type-cards">
             <div class="user-type-card">
                 <div class="user-type-img">
-                    <img src="/api/placeholder/400/200" alt="Pet Owner">
+                    <img src="/media/bg/index_pet_owner.jpg" alt="Pet Owner">
                 </div>
                 <div class="user-type-content">
                     <h3>Pet Owners</h3>
                     <p>Manage your pets' health records, schedule appointments, shop for supplies, and communicate with veterinarians.</p>
-                    <button class="btn btn-primary">Register as User</button>
                 </div>
             </div>
             <div class="user-type-card">
                 <div class="user-type-img">
-                    <img src="/api/placeholder/400/200" alt="Veterinarian">
+                    <img src="/media/bg/index_veterinarian.webp" alt="Veterinarian">
                 </div>
                 <div class="user-type-content">
                     <h3>Veterinarians</h3>
                     <p>Manage your schedule, approve appointments, communicate with pet owners, and provide expert advice.</p>
-                    <button class="btn btn-primary">Register as Doctor</button>
                 </div>
             </div>
             <div class="user-type-card">
                 <div class="user-type-img">
-                    <img src="/api/placeholder/400/200" alt="Shop Owner">
+                    <img src="/media/bg/index_shop.avif" alt="Shop Owner">
                 </div>
                 <div class="user-type-content">
-                    <h3>Shop Owners</h3>
+                    <h3>Shop </h3>
                     <p>Manage your inventory, list products, process orders, and reach a wide audience of pet owners.</p>
-                    <button class="btn btn-primary">Register as Shop</button>
-                </div>
-            </div>
-            <div class="user-type-card">
-                <div class="user-type-img">
-                    <img src="/api/placeholder/400/200" alt="Admin">
-                </div>
-                <div class="user-type-content">
-                    <h3>Administrators</h3>
-                    <p>Oversee the entire system, manage connections between users, doctors, and shops, and ensure smooth operation.</p>
-                    <button class="btn btn-primary">Admin Portal</button>
                 </div>
             </div>
         </div>
@@ -723,7 +720,8 @@
         <div class="cta-content">
             <h2>Ready to Provide the Best Care for Your Pet?</h2>
             <p>Join thousands of pet owners, veterinarians, and shops on the VET WIZARD platform and revolutionize your pet care experience.</p>
-            <button class="btn btn-secondary">Get Started Now</button>
+            <!-- <button >Get Started Now</button> -->
+            <a class="btn btn-secondary" href="{% url 'login' %}">Get Started Now</a>
         </div>
     </section>
 
@@ -739,12 +737,8 @@
                 </div>
                 <p class="testimonial-text">VET WIZARD has completely transformed how I manage my dog's healthcare. The appointment scheduling is seamless, and I love being able to order his supplies right from the same app!</p>
                 <div class="testimonial-author">
-                    <div class="author-img">
-                        <img src="/api/placeholder/60/60" alt="Sarah Johnson">
-                    </div>
                     <div class="author-info">
                         <h4>Sarah Johnson</h4>
-                        <p>Pet Owner</p>
                     </div>
                 </div>
             </div>
@@ -754,12 +748,8 @@
                 </div>
                 <p class="testimonial-text">As a veterinarian, VET WIZARD has streamlined my practice. The appointment management system is intuitive, and I can easily communicate with my patients' owners through the platform.</p>
                 <div class="testimonial-author">
-                    <div class="author-img">
-                        <img src="/api/placeholder/60/60" alt="Dr. Michael Chen">
-                    </div>
                     <div class="author-info">
                         <h4>Dr. Michael Chen</h4>
-                        <p>Veterinarian</p>
                     </div>
                 </div>
             </div>
@@ -769,12 +759,8 @@
                 </div>
                 <p class="testimonial-text">My pet store has seen a significant increase in sales since joining VET WIZARD. The platform connects us with pet owners who need our products, and the inventory management system is fantastic!</p>
                 <div class="testimonial-author">
-                    <div class="author-img">
-                        <img src="/api/placeholder/60/60" alt="Alex Rodriguez">
-                    </div>
                     <div class="author-info">
                         <h4>Alex Rodriguez</h4>
-                        <p>Shop Owner</p>
                     </div>
                 </div>
             </div>
@@ -828,11 +814,7 @@
                     <i class="fas fa-envelope"></i>
                     <p>info@vetwizard.com</p>
                 </div>
-                <h3 class="footer-title">Newsletter</h3>
-                <p>Subscribe for updates and offers</p>
                 <form class="newsletter-form">
-                    <input type="email" placeholder="Your email">
-                    <button type="submit"><i class="fas fa-paper-plane"></i></button>
                 </form>
             </div>
         </div>

@@ -5,12 +5,15 @@ from .forms import CustomUserCreationForm
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 
 
 from doctor.models import Doctor_Profile
 from user.models import PetOwner_Profile
 from user.models import Doctor_Appointment
 from admins.models import User
+from admins.models import WebsiteReview
+
 
 class Home_View(View):
     def get(self,request):
@@ -196,3 +199,28 @@ class All_Booking_Admin_View(View):
         paid_appointments = paginator.get_page(page_number)
 
         return render(request, 'all_bookind_admin.html', {'paid_appointments': paid_appointments})
+    
+
+
+@login_required
+def website_reviews(request):
+    reviews = WebsiteReview.objects.all().order_by('-created_at')  # Get all reviews
+
+    if request.method == "POST":
+        rating = request.POST.get('rating')
+        comment = request.POST.get('comment')
+
+        # Prevent duplicate reviews by the same user
+        if WebsiteReview.objects.filter(user=request.user).exists():
+            review = WebsiteReview.objects.get(user=request.user)
+            review.rating = rating
+            review.comment = comment
+            review.save()
+        else:
+            WebsiteReview.objects.create(user=request.user, rating=rating, comment=comment)
+
+        return redirect('website_reviews')  # Redirect to avoid duplicate form submissions
+
+    avg_rating = WebsiteReview.get_average_rating()  # Get average rating
+
+    return render(request, 'website_reviews.html', {'reviews': reviews, 'avg_rating': avg_rating})

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Reviews</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f8f8f8;
+            line-height: 1.6;
+        }
+        
+        .navbar {
+            background-color: #000;
+            color: #fff;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: #fff;
+        }
+        .navbar-brand:hover {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: #fff;
+        }
+        
+        .navbar-links a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 1.5rem;
+            transition: opacity 0.3s;
+        }
+        
+        .navbar-links a:hover {
+            opacity: 0.8;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .rating-summary {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .avg-rating {
+            font-size: 1.5rem;
+            margin: 0;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .stars-container {
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .star-rating {
+            font-size: 24px;
+            display: inline-flex;
+        }
+        
+        .star-rating .star {
+            color: #ccc;
+            transition: color 0.2s;
+        }
+        
+        .star-rating .star.filled {
+            color: #000;
+        }
+        
+        .review-form {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .star-input {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
+        
+        .star-input input {
+            display: none;
+        }
+        
+        .star-input label {
+            font-size: 30px;
+            color: #ccc;
+            cursor: pointer;
+            margin: 0 5px;
+            transition: color 0.2s;
+        }
+        
+        .star-input label:hover,
+        .star-input label:hover ~ label,
+        .star-input input:checked ~ label {
+            color: #000;
+        }
+        
+        button {
+            background-color: #000;
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #333;
+        }
+        
+        .login-prompt {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .login-prompt a {
+            color: #000;
+            font-weight: 500;
+            text-decoration: underline;
+        }
+        
+        .reviews-section {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .review-item {
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .review-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .review-user {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .review-rating {
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #000;
+            color: #000;
+        }
+        
+        .rating-value {
+            margin-left: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Simple Navbar -->
+    <nav class="navbar">
+        <a href="{% url 'home' %}" class="navbar-brand">VET WIZARD</a>
+        <div class="navbar-links">
+            {% if request.user.is_superuser %}
+                <a class="btn btn-outline-light" href="{% url 'admin' %}"><b><i>Home</i></b></a>
+            {% else %}
+                <a class="btn btn-outline-light" href="{% url 'user' %}"><b><i>Home</i></b></a>
+            {% endif %}
+        </div>        
+    </nav>
+    
+    <div class="container">
+        <!-- Display Average Rating -->
+        <div class="rating-summary">
+            <h3 class="avg-rating">
+                Average Rating: 
+                <div class="stars-container">
+                    <div class="star-rating">
+                        {% with ''|center:5 as range %}
+                        {% for _ in range %}
+                            {% if forloop.counter <= avg_rating_whole %}
+                                <i class="star filled fas fa-star"></i>
+                            {% elif forloop.counter == avg_rating_ceil and avg_rating_fraction > 0 %}
+                                <i class="star filled fas fa-star-half-alt"></i>
+                            {% else %}
+                                <i class="star far fa-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                        {% endwith %}
+                    </div>
+                    <span class="rating-value">{{ avg_rating }}</span>
+                </div>
+            </h3>
+        </div>
+
+        {% if user.is_authenticated %}
+        <div class="review-form">
+            <h3 class="section-title">Leave a Review</h3>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Rating:</label>
+                    <div class="star-input">
+                        <input type="radio" id="star5" name="rating" value="5" required>
+                        <label for="star5" class="fas fa-star"></label>
+                        <input type="radio" id="star4" name="rating" value="4">
+                        <label for="star4" class="fas fa-star"></label>
+                        <input type="radio" id="star3" name="rating" value="3">
+                        <label for="star3" class="fas fa-star"></label>
+                        <input type="radio" id="star2" name="rating" value="2">
+                        <label for="star2" class="fas fa-star"></label>
+                        <input type="radio" id="star1" name="rating" value="1">
+                        <label for="star1" class="fas fa-star"></label>
+                    </div>
+                </div>
+
+                <div class="form-group me-2">
+                    <label for="comment">Comment:</label>
+                    <textarea name="comment" placeholder="Share your thoughts about our website..."></textarea>
+                </div>
+
+                <button type="submit">Submit Review</button>
+            </form>
+        </div>
+        {% else %}
+        <div class="login-prompt">
+            <p><a href="{% url 'login' %}">Login</a> to submit a review.</p>
+        </div>
+        {% endif %}
+
+        <div class="reviews-section">
+            <h3 class="section-title">All Reviews</h3>
+            {% for review in reviews %}
+                <div class="review-item">
+                    <div class="review-header">
+                        <span class="review-user">{{ review.user.username }}</span>
+                        <div class="review-rating">
+                            <div class="star-rating">
+                                {% with ''|center:5 as range %}
+                                {% for _ in range %}
+                                    {% if forloop.counter <= review.rating %}
+                                        <i class="star filled fas fa-star"></i>
+                                    {% else %}
+                                        <i class="star far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                {% endwith %}
+                            </div>
+                        </div>
+                    </div>
+                    <p style="font-size: 20px;">{{ review.comment }}</p>
+                    <p>{{ review.created_at }}</p>
+                </div>
+            {% empty %}
+                <p>No reviews yet. Be the first to leave a review!</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Script for handling half-star display in average rating -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Calculate whole and fractional parts for template
+            const avgRating = {{ avg_rating|default:0 }};
+            window.avgRatingWhole = Math.floor(avgRating);
+            window.avgRatingFraction = avgRating - avgRatingWhole;
+            window.avgRatingCeil = avgRatingFraction > 0 ? avgRatingWhole + 1 : avgRatingWhole;
+        });
+    </script>
+</body>
+</html>
