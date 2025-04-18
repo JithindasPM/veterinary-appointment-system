@@ -69,7 +69,7 @@ class User_Profile_Create_View(View):
             profile = form.save(commit=False)
             profile.user = request.user
             profile.save()
-            return redirect('doctor') 
+            return redirect('user') 
         return render(request, 'user_profile.html', {'form': form})
     
 class User_Profile_Updation_View(View):
