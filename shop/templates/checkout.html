@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Checkout</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <h2>Processing Payment for {{ cart_item.product.name }}</h2>
+    <p>Amount: ₹{{ cart_item.total_price }}</p>
+
+    <button id="rzp-button1">Pay Now</button>
+
+    <script>
+        const options = {
+            "key": "{{ razorpay_key }}",
+            "amount": "{{ amount }}", // in paise
+            "currency": "INR",
+            "name": "VetWizard",
+            "description": "Shop Purchase",
+            "order_id": "{{ razorpay_order_id }}",
+            "handler": function (response) {
+                // On success, redirect to Django view
+                window.location.href = "{% url 'success_payment' %}";
+            },
+            "prefill": {
+                "name": "{{ request.user.username }}",
+                "email": "{{ request.user.email }}"
+            },
+            "theme": {
+                "color": "#F37254"
+            }
+        };
+
+        const rzp1 = new Razorpay(options);
+        document.getElementById('rzp-button1').onclick = function (e) {
+            rzp1.open();
+            e.preventDefault();
+        };
+    </script>
+</body>
+</html>

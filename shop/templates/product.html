@@ -1,0 +1,131 @@
+{% extends 'shop.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .main {
+        border-bottom: 2px solid black;
+        padding-bottom: 20px;
+    }
+    
+    /* Ensure consistent alignment in table cells */
+    .table td.action-column {
+        text-align: center;
+    }
+    .table td {
+        text-align: center;
+        vertical-align: middle;
+      }
+      
+      /* For the action buttons */
+      .action-buttons {
+        display: inline-flex;
+        gap: 1rem;
+        justify-content: center;
+      }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4 main">
+    <h2 class="">Shop Management Dashboard</h2>
+    <div>
+        <button class="btn btn-outline-primary">Admin <i class="fas fa-user ms-2"></i></button>
+    </div>
+</div>
+<div class="container mt-5">
+    <h2 class="mb-4 text-primary">Add New Product</h2>
+
+    <div class="card shadow-lg mb-5">
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="id_category" class="form-label">Category</label>
+                        {{ form.category }}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="id_name" class="form-label">Product Name</label>
+                        {{ form.name }}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_description" class="form-label">Description</label>
+                    {{ form.description }}
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="id_price" class="form-label">Price (₹)</label>
+                        {{ form.price }}
+                    </div>
+                    <div class="col-md-4">
+                        <label for="id_stock" class="form-label">Stock</label>
+                        {{ form.stock }}
+                    </div>
+                    <div class="col-md-4">
+                        <label for="id_image" class="form-label">Product Image</label>
+                        {{ form.image }}
+                    </div>
+                </div>
+
+                <div class="">
+                    <button type="submit" class="btn btn-success form-control">Save Product</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+    <hr>
+
+    <h3 class="mt-4">All Products</h3>
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th class="text-center">Image</th>
+                <th class="text-center">Name</th>
+                <th class="text-center">Category</th>
+                <th class="text-center">Price (₹)</th>
+                <th class="text-center">Stock</th>
+                <th class="text-center">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in product %}
+            <tr>
+                <td class="text-center">
+                    {% if p.image %}
+                    <img src="{{ p.image.url }}" alt="{{ p.name }}" width="60">
+                    {% else %}
+                    No image
+                    {% endif %}
+                </td>
+                <td class="text-center"><b>{{ p.name }}</b></td>
+                <td class="text-center">{{ p.category.name }}</td>
+                <td class="text-center">₹{{ p.price }}</td>
+                <td class="text-center">{{ p.stock }}</td>
+                <td class="action-column">
+                    <div class="action-buttons">
+                        <a href="{% url 'products_detail' p.id %}" class="text-primary" title="View Product">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                        <a href="{% url 'products_update' p.id %}" class="text-primary" title="Edit Product">
+                            <i class="bi bi-gear"></i>
+                        </a>
+                        <a href="{% url 'products_delete' p.id %}" class="text-danger" title="Delete Product">
+                            <i class="bi bi-trash3"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">No products found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

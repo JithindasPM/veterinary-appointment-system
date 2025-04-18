@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <title>VetWizard - Premium Pet Supplies</title>
     <style>
         :root {
@@ -13,41 +17,41 @@
             --dark: #343a40;
             --accent: #ff914d;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
             background-color: #f5f5f5;
             color: var(--dark);
             line-height: 1.6;
         }
-        
+
         header {
             background-color: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             padding: 1rem;
             position: sticky;
             top: 0;
             z-index: 100;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 1rem;
         }
-        
+
         .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .logo {
             display: flex;
             align-items: center;
@@ -55,50 +59,50 @@
             font-weight: 700;
             color: var(--primary);
         }
-        
+
         .logo span {
             color: var(--accent);
         }
-        
+
         nav ul {
             display: flex;
             list-style: none;
         }
-        
+
         nav ul li {
             margin-left: 1.5rem;
         }
-        
+
         nav ul li a {
             text-decoration: none;
             color: var(--dark);
             font-weight: 500;
             transition: color 0.3s;
         }
-        
+
         nav ul li a:hover {
             color: var(--primary);
         }
-        
+
         .hero {
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
                 url('/api/placeholder/1200/400') center/cover no-repeat;
             color: white;
             text-align: center;
             padding: 5rem 1rem;
         }
-        
+
         .hero h1 {
             font-size: 2.5rem;
             margin-bottom: 1rem;
         }
-        
+
         .hero p {
             font-size: 1.2rem;
             max-width: 800px;
             margin: 0 auto 2rem;
         }
-        
+
         .btn {
             display: inline-block;
             background-color: var(--accent);
@@ -109,94 +113,52 @@
             font-weight: 600;
             transition: background-color 0.3s;
         }
-        
+
         .btn:hover {
             background-color: #e67e22;
         }
-        
-        .categories {
-            padding: 3rem 0;
-            text-align: center;
-        }
-        
-        .categories h2 {
-            margin-bottom: 2rem;
-            color: var(--primary);
-        }
-        
-        .category-container {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-        }
-        
-        .category {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            width: 180px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-            cursor: pointer;
-        }
-        
-        .category:hover {
-            transform: translateY(-5px);
-        }
-        
-        .category img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-        }
-        
-        .category h3 {
-            padding: 1rem;
-            font-size: 1.1rem;
-        }
-        
+
         .featured-products {
             padding: 3rem 0;
             background-color: white;
         }
-        
+
         .featured-products h2 {
             text-align: center;
             margin-bottom: 2rem;
             color: var(--primary);
         }
-        
+
         .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 2rem;
         }
-        
+
         .product-card {
             background: #f9f9f9;
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s;
         }
-        
+
         .product-card:hover {
             transform: translateY(-5px);
         }
-        
+
         .product-image {
             height: 200px;
             overflow: hidden;
             position: relative;
         }
-        
+
         .product-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        
+
         .sale-badge {
             position: absolute;
             top: 10px;
@@ -208,34 +170,34 @@
             font-size: 0.8rem;
             font-weight: 600;
         }
-        
+
         .product-info {
             padding: 1rem;
         }
-        
+
         .product-info h3 {
             margin-bottom: 0.5rem;
         }
-        
+
         .product-price {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
         }
-        
+
         .current-price {
             font-weight: 700;
             font-size: 1.2rem;
             color: var(--primary);
         }
-        
+
         .old-price {
             text-decoration: line-through;
             color: var(--secondary);
             font-size: 0.9rem;
         }
-        
+
         .add-to-cart {
             width: 100%;
             background-color: var(--primary);
@@ -247,48 +209,48 @@
             font-weight: 600;
             transition: background-color 0.3s;
         }
-        
+
         .add-to-cart:hover {
             background-color: #3a6d96;
         }
-        
+
         .testimonials {
             padding: 3rem 0;
             background-color: #f5f5f5;
             text-align: center;
         }
-        
+
         .testimonials h2 {
             margin-bottom: 2rem;
             color: var(--primary);
         }
-        
+
         .testimonials-container {
             display: flex;
             justify-content: center;
             gap: 2rem;
             flex-wrap: wrap;
         }
-        
+
         .testimonial {
             background: white;
             padding: 1.5rem;
             border-radius: 8px;
             max-width: 350px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
         }
-        
+
         .stars {
             color: gold;
             margin-bottom: 1rem;
         }
-        
+
         .customer {
             display: flex;
             align-items: center;
             margin-top: 1rem;
         }
-        
+
         .customer img {
             width: 50px;
             height: 50px;
@@ -296,53 +258,53 @@
             margin-right: 1rem;
             object-fit: cover;
         }
-        
+
         footer {
             background-color: var(--dark);
             color: white;
             padding: 3rem 0 1rem;
         }
-        
+
         .footer-content {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 2rem;
             margin-bottom: 2rem;
         }
-        
+
         .footer-column h3 {
             margin-bottom: 1rem;
             color: var(--accent);
         }
-        
+
         .footer-column ul {
             list-style: none;
         }
-        
+
         .footer-column ul li {
             margin-bottom: 0.5rem;
         }
-        
+
         .footer-column ul li a {
             color: #ddd;
             text-decoration: none;
             transition: color 0.3s;
         }
-        
+
         .footer-column ul li a:hover {
             color: white;
         }
-        
+
         .social-links {
             display: flex;
             gap: 1rem;
         }
-        
+
         .social-links a {
             color: white;
             font-size: 1.5rem;
         }
-        
+
         .copyright {
             text-align: center;
             padding-top: 1rem;
@@ -350,21 +312,21 @@
             font-size: 0.9rem;
             color: #aaa;
         }
-        
+
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
                 gap: 1rem;
             }
-            
+
             nav ul {
                 margin-top: 1rem;
             }
-            
+
             .hero h1 {
                 font-size: 2rem;
             }
-            
+
             .testimonials-container {
                 flex-direction: column;
                 align-items: center;
@@ -372,22 +334,23 @@
         }
     </style>
 </head>
+
 <body>
     <header>
         <div class="container header-content">
-            <div class="logo">Vet<span>Wizard</span></div>
+            <div class="logo"><a style="text-decoration: none;" href="{% url 'user' %}">Vet<span>Wizard</span></a></div>
             <nav>
                 <ul>
                     <li><a href="#">Home</a></li>
                     <li><a href="#">Shop</a></li>
                     <li><a href="#">About</a></li>
                     <li><a href="#">Contact</a></li>
-                    <li><a href="#">Cart (0)</a></li>
+                    <li><a href="{% url 'cart' %}">Cart</a></li>
                 </ul>
             </nav>
         </div>
     </header>
-    
+
     <section class="hero">
         <div class="container">
             <h1>Premium Products for Your Furry Friends</h1>
@@ -395,192 +358,86 @@
             <a href="#featured" class="btn">Shop Now</a>
         </div>
     </section>
-    
-    <section class="categories">
-        <div class="container">
-            <h2>Shop by Pet</h2>
-            <div class="category-container">
-                <div class="category">
-                    <img src="/api/placeholder/180/120" alt="Dogs">
-                    <h3>Dogs</h3>
-                </div>
-                <div class="category">
-                    <img src="/api/placeholder/180/120" alt="Cats">
-                    <h3>Cats</h3>
-                </div>
-                <div class="category">
-                    <img src="/api/placeholder/180/120" alt="Birds">
-                    <h3>Birds</h3>
-                </div>
-                <div class="category">
-                    <img src="/api/placeholder/180/120" alt="Small Pets">
-                    <h3>Small Pets</h3>
-                </div>
-                <div class="category">
-                    <img src="/api/placeholder/180/120" alt="Fish">
-                    <h3>Fish</h3>
-                </div>
-            </div>
-        </div>
-    </section>
-    
+
     <section id="featured" class="featured-products">
         <div class="container">
             <h2>Featured Products</h2>
             <div class="products-grid">
+                {% for pro in product %}
                 <div class="product-card">
-                    <div class="product-image">
-                        <img src="/api/placeholder/250/200" alt="Premium Dog Food">
-                        <div class="sale-badge">SALE</div>
-                    </div>
-                    <div class="product-info">
-                        <h3>Premium Dog Food</h3>
-                        <p>Nutrient-rich formula for all breeds</p>
-                        <div class="product-price">
-                            <span class="current-price">$24.99</span>
-                            <span class="old-price">$29.99</span>
+                    <form method="post" action="{% url 'add_to_cart' pro.id %}" class="product-card">
+                        {% csrf_token %}
+                        <div class="product-image">
+                            {% if pro.image %}
+                                <img src="{{ pro.image.url }}" alt="{{ pro.name }}">
+                            {% else %}
+                                <img src="https://via.placeholder.com/250x200?text=No+Image" alt="No image">
+                            {% endif %}
+                            <div class="sale-badge">SALE</div>
                         </div>
-                        <button class="add-to-cart">Add to Cart</button>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="/api/placeholder/250/200" alt="Interactive Cat Toy">
-                    </div>
-                    <div class="product-info">
-                        <h3>Interactive Cat Toy</h3>
-                        <p>Stimulating play for active felines</p>
-                        <div class="product-price">
-                            <span class="current-price">$15.99</span>
+                    
+                        <div class="product-info">
+                            <h3>{{ pro.name }}</h3>
+                            <p>{{ pro.description }}</p>
+                    
+                            <div class="product-price mb-2">
+                                <span class="current-price">
+                                    <i class="bi bi-currency-rupee"></i>{{ pro.price }}
+                                </span>
+                                <span class="current-price ms-2">
+                                    <b>Stock</b> <i class="bi bi-database-check"></i> {{ pro.stock }}
+                                </span>
+                            </div>
+                    
+                            <div class="d-flex align-items-center mb-2">
+                                <label for="qty_{{ pro.id }}" class="me-2">Qty:</label>
+                                <input type="number" name="quantity" id="qty_{{ pro.id }}" value="1" min="1" max="{{ pro.stock }}" class="form-control" style="width: 70px;">
+                            </div>
+                    
+                            <button type="submit" class="add-to-cart btn btn-primary">Add to Cart</button>
                         </div>
-                        <button class="add-to-cart">Add to Cart</button>
-                    </div>
+                    </form>
+                    
                 </div>
-                
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="/api/placeholder/250/200" alt="Pet Health Supplements">
-                    </div>
-                    <div class="product-info">
-                        <h3>Pet Health Supplements</h3>
-                        <p>Support your pet's immune system</p>
-                        <div class="product-price">
-                            <span class="current-price">$19.99</span>
-                        </div>
-                        <button class="add-to-cart">Add to Cart</button>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="/api/placeholder/250/200" alt="Comfortable Pet Bed">
-                        <div class="sale-badge">SALE</div>
-                    </div>
-                    <div class="product-info">
-                        <h3>Comfortable Pet Bed</h3>
-                        <p>Orthopedic support for restful sleep</p>
-                        <div class="product-price">
-                            <span class="current-price">$34.99</span>
-                            <span class="old-price">$44.99</span>
-                        </div>
-                        <button class="add-to-cart">Add to Cart</button>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="/api/placeholder/250/200" alt="Bird Cage Accessories">
-                    </div>
-                    <div class="product-info">
-                        <h3>Bird Cage Accessories</h3>
-                        <p>Enrichment toys for feathered friends</p>
-                        <div class="product-price">
-                            <span class="current-price">$12.99</span>
-                        </div>
-                        <button class="add-to-cart">Add to Cart</button>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="/api/placeholder/250/200" alt="Grooming Kit">
-                    </div>
-                    <div class="product-info">
-                        <h3>Professional Grooming Kit</h3>
-                        <p>Complete set for at-home pet care</p>
-                        <div class="product-price">
-                            <span class="current-price">$39.99</span>
-                        </div>
-                        <button class="add-to-cart">Add to Cart</button>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="/api/placeholder/250/200" alt="Aquarium Decor">
-                    </div>
-                    <div class="product-info">
-                        <h3>Aquarium Decor Set</h3>
-                        <p>Create a beautiful underwater habitat</p>
-                        <div class="product-price">
-                            <span class="current-price">$22.99</span>
-                        </div>
-                        <button class="add-to-cart">Add to Cart</button>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="/api/placeholder/250/200" alt="Small Pet Habitat">
-                    </div>
-                    <div class="product-info">
-                        <h3>Small Pet Habitat</h3>
-                        <p>Spacious home for small companions</p>
-                        <div class="product-price">
-                            <span class="current-price">$49.99</span>
-                        </div>
-                        <button class="add-to-cart">Add to Cart</button>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </section>
-    
+
     <section class="testimonials">
         <div class="container">
             <h2>What Pet Parents Say</h2>
             <div class="testimonials-container">
                 <div class="testimonial">
                     <div class="stars">★★★★★</div>
-                    <p>"The supplements from VetWizard have made a noticeable difference in my senior dog's mobility. He's more energetic than he's been in years!"</p>
+                    <p>"The supplements from VetWizard have made a noticeable difference in my senior dog's mobility.
+                        He's more energetic than he's been in years!"</p>
                     <div class="customer">
-                        <img src="/api/placeholder/50/50" alt="Customer">
-                        <div>
+                        <div class="d-flex justify-content-between w-100">
                             <h4>Sarah M.</h4>
                             <p>Dog Owner</p>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="testimonial">
                     <div class="stars">★★★★★</div>
-                    <p>"My cats are obsessed with the interactive toys. Great quality and has withstood months of aggressive play. Will definitely be ordering more!"</p>
+                    <p>"My cats are obsessed with the interactive toys. Great quality and has withstood months of
+                        aggressive play. Will definitely be ordering more!"</p>
                     <div class="customer">
-                        <img src="/api/placeholder/50/50" alt="Customer">
-                        <div>
+                        <div class="d-flex justify-content-between w-100">
                             <h4>James L.</h4>
                             <p>Cat Owner</p>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="testimonial">
                     <div class="stars">★★★★★</div>
-                    <p>"Fast shipping, excellent customer service, and my bird absolutely loves the new perches and toys. VetWizard is now my go-to for all pet supplies."</p>
+                    <p>"Fast shipping, excellent customer service, and my bird absolutely loves the new perches and
+                        toys. VetWizard is now my go-to for all pet supplies."</p>
                     <div class="customer">
-                        <img src="/api/placeholder/50/50" alt="Customer">
-                        <div>
+                        <div class="d-flex justify-content-between w-100">
                             <h4>Emily R.</h4>
                             <p>Bird Owner</p>
                         </div>
@@ -589,15 +446,16 @@
             </div>
         </div>
     </section>
-    
+
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column">
                     <h3>VetWizard</h3>
-                    <p>Premium pet products developed with veterinary expertise to ensure the health and happiness of your beloved companions.</p>
+                    <p>Premium pet products developed with veterinary expertise to ensure the health and happiness of
+                        your beloved companions.</p>
                 </div>
-                
+
                 <div class="footer-column">
                     <h3>Shop</h3>
                     <ul>
@@ -608,7 +466,7 @@
                         <li><a href="#">Fish</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-column">
                     <h3>Information</h3>
                     <ul>
@@ -619,7 +477,7 @@
                         <li><a href="#">Blog</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-column">
                     <h3>Contact Us</h3>
                     <ul>
@@ -635,11 +493,28 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="copyright">
                 <p>&copy; 2025 VetWizard. All rights reserved.</p>
             </div>
         </div>
     </footer>
+
+    <script>
+        document.querySelectorAll("form").forEach(form => {
+            form.addEventListener("submit", function(e) {
+                const qtyInput = form.querySelector("input[name='quantity']");
+                const maxQty = parseInt(qtyInput.getAttribute("max"));
+                const enteredQty = parseInt(qtyInput.value);
+    
+                if (enteredQty > maxQty) {
+                    e.preventDefault(); // Stop form submission
+                    alert("Cannot add to cart: Requested quantity exceeds stock!");
+                }
+            });
+        });
+    </script>
+    
 </body>
+
 </html>
