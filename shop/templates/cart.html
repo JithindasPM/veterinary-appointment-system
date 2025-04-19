@@ -3,174 +3,568 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Cart</title>
+    <title>Your Cart | VetWizard</title>
 
-    <!-- Bootstrap CSS (for layout and styling) -->
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Add this in the head section of your cart.html -->
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- Font Awesome for better icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Razorpay Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <!-- Custom Styles -->
     <style>
+        :root {
+            --primary: #4e73df;
+            --secondary: #f8f9fc;
+            --accent: #ff8c00;
+            --dark: #2e3951;
+            --light: #f8f9fc;
+            --success: #1cc88a;
+            --danger: #e74a3b;
+            --box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+            --card-border-radius: 0.75rem;
+        }
+        
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            font-family: 'Poppins', Arial, sans-serif;
+            background-color: var(--secondary);
+            color: var(--dark);
+            padding: 0;
+            margin: 0;
+        }
+
+        .header-section {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 15px 30px;
+        }
+        
+        .content-section {
             padding: 30px;
         }
 
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-        }
-
-        table {
-            width: 100%;
-            margin-bottom: 20px;
-            border-collapse: collapse;
-        }
-
-        table th, table td {
-            padding: 15px;
-            text-align: center;
-            border: 1px solid #ddd;
-        }
-
-        table th {
-            background-color: #007bff;
-            color: black;
-        }
-
-        table td {
-            background-color: #fff;
-        }
-
-        .btn-checkout, .btn-remove {
-            padding: 8px 16px;
-            color: white;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-
-        .btn-checkout {
-            background-color: #28a745;
-            border: none;
-        }
-
-        .btn-checkout:hover {
-            background-color: #218838;
-        }
-
-        .btn-remove {
-            background-color: #dc3545;
-            border: none;
-        }
-
-        .btn-remove:hover {
-            background-color: #c82333;
-        }
-
-        .cart-summary {
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        .cart-summary h3 {
-            font-size: 1.5rem;
-        }
-
-        .cart-item {
-            margin-bottom: 20px;
-        }
-
-        .cart-count {
-            background-color: #ff5733;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 10px;
-        }
-
-        /* Media Query for smaller devices */
-        @media (max-width: 768px) {
-            table th, table td {
-                padding: 10px;
-            }
-
-            .btn-checkout, .btn-remove {
-                width: 100%;
-                margin-top: 10px;
-            }
-        }
         .logo {
             display: flex;
             align-items: center;
             font-size: 1.8rem;
             font-weight: 700;
+            color: var(--dark);
+            text-decoration: none;
         }
 
         .logo span {
-            color: orange;
+            color: var(--accent);
+        }
+        
+        .logo_a:hover {
+            text-decoration: none;
+            color: var(--dark);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .page-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background-color: var(--accent);
+        }
+
+        .cart-container {
+            background-color: white;
+            border-radius: var(--card-border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .cart-header {
+            background-color: var(--primary);
+            color: white;
+            border-radius: var(--card-border-radius) var(--card-border-radius) 0 0;
+            margin: -2rem -2rem 2rem -2rem;
+            padding: 1.5rem 2rem;
+        }
+
+        .cart-item {
+            border-bottom: 1px solid #eee;
+            padding: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        
+        .cart-item:hover {
+            background-color: rgba(78, 115, 223, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .product-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .product-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-right: 1rem;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        
+        .product-name {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            color: var(--dark);
+        }
+        
+        .product-category {
+            color: #777;
+            font-size: 0.85rem;
+        }
+
+        .price {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .total-price {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .quantity-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .quantity-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .quantity-num {
+            padding: 0 15px;
+            font-weight: 600;
+        }
+
+        .action-btn {
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+        }
+        
+        .checkout-btn {
+            background-color: var(--success);
+            border: none;
+            color: white;
+        }
+        
+        .checkout-btn:hover {
+            background-color: #15a876;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(28, 200, 138, 0.3);
+        }
+        
+        .remove-btn {
+            background-color: white;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+        
+        .remove-btn:hover {
+            background-color: var(--danger);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 74, 59, 0.3);
+        }
+
+        .cart-summary {
+            background: linear-gradient(145deg, var(--primary), #3a5fce);
+            color: white;
+            border-radius: var(--card-border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+            text-align: center;
+        }
+        
+        .summary-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .summary-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 3px;
+            background-color: rgba(255,255,255,0.5);
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .summary-row:last-child {
+            border-bottom: none;
+        }
+        
+        .summary-label {
+            font-weight: 500;
+        }
+        
+        .summary-value {
+            font-weight: 600;
+        }
+        
+        .grand-total {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 1rem;
+        }
+        
+        .checkout-all-btn {
+            background-color: white;
+            color: var(--primary);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 30px;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .checkout-all-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .empty-cart {
+            text-align: center;
+            padding: 3rem 0;
+        }
+        
+        .empty-cart-icon {
+            font-size: 5rem;
+            color: #ddd;
+            margin-bottom: 1.5rem;
+        }
+        
+        .empty-cart-text {
+            font-size: 1.2rem;
+            color: #888;
+            margin-bottom: 2rem;
+        }
+        
+        .continue-shopping-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .continue-shopping-btn:hover {
+            background-color: #3a5fce;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 115, 223, 0.3);
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* Media Query for smaller devices */
+        @media (max-width: 992px) {
+            .content-section {
+                padding: 20px;
+            }
+            
+            .cart-container, .cart-summary {
+                padding: 1.5rem;
+            }
+            
+            .cart-header {
+                margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+                padding: 1.2rem 1.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-section {
+                padding: 10px 15px;
+            }
+            
+            .logo {
+                font-size: 1.5rem;
+            }
+            
+            .product-image {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .cart-item {
+                padding: 1rem 0;
+            }
+            
+            .action-buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .action-btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="d-flex justify-content-between align-items-center mb-4 main">
-        <div class="logo"><a class="logo_a" style="text-decoration: none;" href="{% url 'user' %}">Vet<span>Wizard</span></a></div>
-        <h2 class="">Shop Management Dashboard</h2>
-        <div>
-            <a class="btn btn-outline-primary" href="{% url 'main_shop' %}"><i class="bi bi-bag-check"></i> Continue shopping ?</a>
+    <!-- Header Section -->
+    <div class="header-section">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="{% url 'user' %}" class="logo logo_a">Vet<span>Wizard</span></a>
+                <h2 class="d-none d-md-block mb-0">Shop Management Dashboard</h2>
+                <a class="btn btn-outline-primary" href="{% url 'main_shop' %}">
+                    <i class="fas fa-shopping-bag me-2"></i>Continue Shopping
+                </a>
+            </div>
         </div>
     </div>
 
-    <h1>Your Cart</h1>
+    <!-- Content Section -->
+    <div class="content-section">
+        <div class="container">
+            <h1 class="page-title fade-in">Your Shopping Cart</h1>
 
-    {% if cart_items %}
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Total Price</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in cart_items %}
-                <tr>
-                    <td>{{ item.product.name }}</td>
-                    <td>₹{{ item.product.price }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>₹{{ item.total_price }}</td>
-                    <td class="cart-item">
-                        <!-- Checkout for individual item -->
-                        <!-- <a href="" class="btn btn-checkout">Checkout</a> -->
-                        <a href="{% url 'checkout_product' item.id %}" class="btn btn-checkout">Checkout</a>
-
-                        <!-- Remove item from cart -->
-                        <a href="{% url 'cart_delete' item.id %}" class="btn btn-remove" onclick="return confirmDelete()">Remove</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <div class="cart-summary">
-            <h3>Total Price: ₹{{ total_price }}</h3>
+            {% if cart_items %}
+            <div class="row">
+                <!-- Cart Items -->
+                <div class="col-lg-8 mb-4 fade-in" style="animation-delay: 0.1s;">
+                    <div class="cart-container">
+                        <div class="cart-header">
+                            <h4 class="mb-0"><i class="fas fa-shopping-cart me-2"></i>Cart Items ({{ cart_items|length }})</h4>
+                        </div>
+                        
+                        {% for item in cart_items %}
+                        <div class="cart-item fade-in" style="animation-delay: {{ forloop.counter|add:'2' }}00ms;">
+                            <div class="row align-items-center">
+                                <div class="col-md-5">
+                                    <div class="product-info">
+                                        <!-- If product has image, display it -->
+                                        {% if item.product.image %}
+                                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="product-image">
+                                        {% else %}
+                                        <div class="product-image d-flex align-items-center justify-content-center bg-light">
+                                            <i class="fas fa-image text-muted"></i>
+                                        </div>
+                                        {% endif %}
+                                        <div>
+                                            <h5 class="product-name">{{ item.product.name }}</h5>
+                                            <!-- If category exists -->
+                                            {% if item.product.category %}
+                                            <div class="product-category">{{ item.product.category.name }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 text-center">
+                                    <div class="price">₹{{ item.product.price }}</div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="d-flex flex-column flex-md-row align-items-center gap-2 action-buttons">
+                                        <a href="{% url 'checkout_product' item.id %}" class="btn action-btn checkout-btn me-4">
+                                            <i class="fas fa-check me-1"></i>Checkout
+                                        </a>
+                                        <a href="{% url 'cart_delete' item.id %}" class="btn action-btn remove-btn" onclick="return confirmDelete()">
+                                            <i class="fas fa-trash me-1"></i>Remove
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Cart Summary -->
+                <div class="col-lg-4 fade-in" style="animation-delay: 0.3s;">
+                    <div class="cart-summary">
+                        <h4 class="summary-title">Order Summary</h4>
+                        
+                        <div class="summary-row">
+                            <span class="summary-label">Items ({{ cart_items|length }}):</span>
+                            <span class="summary-value">₹{{ total_price }}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Shipping:</span>
+                            <span class="summary-value">Free</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Tax:</span>
+                            <span class="summary-value">Included</span>
+                        </div>
+                        
+                        <div class="grand-total">
+                            <span>Total:</span>
+                            <span>₹{{ total_price }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <!-- Empty Cart -->
+            <div class="empty-cart fade-in">
+                <div class="empty-cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <h3>Your cart is empty</h3>
+                <p class="empty-cart-text">Looks like you haven't added any products to your cart yet.</p>
+                <a href="{% url 'main_shop' %}" class="btn continue-shopping-btn">
+                    <i class="fas fa-store me-2"></i>Browse Products
+                </a>
+            </div>
+            {% endif %}
         </div>
+    </div>
 
-    {% else %}
-        <p class="text-center">Your cart is empty.</p>
-    {% endif %}
-
-    <!-- Bootstrap JS (for interactive elements) -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom Script -->
     <script>
         function confirmDelete() {
             return confirm("Are you sure you want to remove this item from your cart?");
         }
         
+        // Add animation class to elements when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Quantity buttons functionality
+            const decreaseBtns = document.querySelectorAll('.decrease-btn');
+            const increaseBtns = document.querySelectorAll('.increase-btn');
+            
+            decreaseBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const itemId = this.dataset.itemId;
+                    const quantityElement = this.nextElementSibling;
+                    let quantity = parseInt(quantityElement.textContent);
+                    
+                    if (quantity > 1) {
+                        updateQuantity(itemId, quantity - 1);
+                    }
+                });
+            });
+            
+            increaseBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const itemId = this.dataset.itemId;
+                    const quantityElement = this.previousElementSibling;
+                    let quantity = parseInt(quantityElement.textContent);
+                    
+                    updateQuantity(itemId, quantity + 1);
+                });
+            });
+            
+            // Function to update quantity (this would need an AJAX call to your backend)
+            function updateQuantity(itemId, newQuantity) {
+                // Placeholder for actual implementation
+                console.log(`Update item ${itemId} to quantity ${newQuantity}`);
+                // In a real implementation, this would make an AJAX call to update the quantity
+                // For now, we'll just reload the page
+                // location.reload();
+                
+                // You would implement an AJAX call like this:
+                /*
+                fetch(`/update-cart/${itemId}/${newQuantity}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken'),
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    }
+                });
+                */
+            }
+            
+            // Function to get CSRF token for Django
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+        });
     </script>
-
 </body>
 </html>

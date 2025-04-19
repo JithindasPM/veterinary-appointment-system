@@ -1,5 +1,3 @@
-from django import forms
-from .models import Doctor_Profile
 
 from django import forms
 from .models import Doctor_Profile

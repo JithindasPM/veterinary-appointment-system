@@ -1,25 +1,90 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Checkout</title>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-</head>
-<body>
-    <h2>Processing Payment for {{ cart_item.product.name }}</h2>
-    <p>Amount: ₹{{ cart_item.total_price }}</p>
+{% extends 'user.html' %}
+{% load static %}
 
-    <button id="rzp-button1">Pay Now</button>
+{% block content %}
+
+    <style>
+        .checkout-card {
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        .checkout-card h2 {
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            color: white;
+            text-shadow:  0 0 2px black;
+        }
+        .product-name {
+            font-size: 1.2rem;
+            color: white;
+            text-shadow:  0 0 1px black;
+            margin-bottom: 0.5rem;
+        }
+        .amount {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: black;
+            text-shadow:  0 0 1px;
+            margin-bottom: 2rem;
+        }
+        .btn-checkout {
+            background-color: rgba(14, 14, 14, 0.352);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            color: white;
+            font-size: 1rem;
+            border-radius: 30px;
+            transition: 0.3s;
+        }
+        .btn-checkout:hover {
+            background-color: rgba(14, 14, 14, 0.647);
+            border: 1px solid white;
+        }
+        .main_div{
+            display: flex;justify-content: center;align-items: center;
+            height: 80vh;
+        }
+        .container{
+            background-image: url('/media/bg/checkout_bg.jpg');
+            background-position: center;
+            background-size: cover;
+        }
+    </style>
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <div class="main_div">
+                    <div class="checkout-card">
+                        <h2>VetWizard Payment</h2>
+                        <div class="product-name"><b>{{ cart_item.product.name }}</b></div>
+                        <div class="amount">₹{{ cart_item.total_price }}</div>
+                        <button id="rzp-button1" class="btn-checkout"><b><i>Pay Now</i></b></button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6"></div>
+        </div>
+    </div>
+    <footer class="text-center mt-5" style="color: #888;">
+        <p class="text-dark" style="font-size: 0.9rem;">&copy; 2025 VetWizard. All rights reserved.</p>
+    </footer>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <script>
         const options = {
             "key": "{{ razorpay_key }}",
-            "amount": "{{ amount }}", // in paise
+            "amount": "{{ amount }}",
             "currency": "INR",
             "name": "VetWizard",
             "description": "Shop Purchase",
             "order_id": "{{ razorpay_order_id }}",
             "handler": function (response) {
-                // On success, redirect to Django view
                 window.location.href = "{% url 'success_payment' %}";
             },
             "prefill": {
@@ -37,5 +102,4 @@
             e.preventDefault();
         };
     </script>
-</body>
-</html>
+{% endblock %}

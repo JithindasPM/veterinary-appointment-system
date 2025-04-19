@@ -136,7 +136,8 @@
         }
 
         /* Appointments and Orders */
-        .appointment-icon, .order-icon {
+        .appointment-icon,
+        .order-icon {
             width: 40px;
             height: 40px;
             border-radius: 8px;
@@ -169,7 +170,8 @@
             background-color: var(--success);
         }
 
-        .status-completed, .status-delivered {
+        .status-completed,
+        .status-delivered {
             background-color: var(--secondary);
         }
 
@@ -185,11 +187,13 @@
         .action-card:hover {
             transform: translateY(-5px);
         }
-        .modal-content{
+
+        .modal-content {
             width: 800px;
             height: min-content;
         }
-        .modal-body{
+
+        .modal-body {
             padding: 50px;
         }
 
@@ -211,7 +215,9 @@
                 width: 70px;
             }
 
-            .sidebar-header h2, .sidebar-header p, .sidebar-menu a span {
+            .sidebar-header h2,
+            .sidebar-header p,
+            .sidebar-menu a span {
                 display: none;
             }
 
@@ -229,9 +235,17 @@
                 margin-left: 70px;
             }
         }
-        .link_a{
+
+        .link_a {
             text-decoration: none;
             color: black;
+        }
+        .welcome-card {
+            background: linear-gradient(to right, #f8d7da, #fff);
+            border-left: 6px solid #dc3545;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -248,17 +262,20 @@
                 <p>Pet Owner Portal</p>
             </div>
             <ul class="sidebar-menu">
-                <li><a href="{% url 'user' %}" class="active"><i class="fas fa-th-large"></i> <span>Dashboard</span></a></li>
-                <li><a href="{% url 'user_profile_update' %}"><i class="fas fa-user"></i> <span>My Profile</span></a></li>
-                <li><a href="#"><i class="fas fa-paw"></i> <span>My Pets</span></a></li>
-                <li><a href="{% url 'all_appointment' %}"><i class="fas fa-calendar-alt"></i> <span>Appointments</span></a></li>
-                <li><a href="{% url 'all_doctor' %}"><i class="fas fa-stethoscope"></i> <span>Find Doctor</span></a></li>
-                <li><a href="{% url 'main_shop' %}"><i class="fas fa-shopping-cart"></i> <span>Shop</span></a></li>
-                <li>
-                    <a href="{% url 'cart' %}"><i class="fas fa-cart-plus"></i> <span>Cart</span></a>
+                <li><a href="{% url 'user' %}" class="active"><i class="fas fa-th-large"></i> <span>Dashboard</span></a>
                 </li>
-                <li><a href="#"><i class="fas fa-box"></i> <span>My Orders</span></a></li>
-                <li><a href="{% url 'website_reviews' %}"><i class="fas fa-comment-alt"></i> <span>Send Feedback</span></a></li>
+                <li><a href="{% url 'user_profile_update' %}"><i class="fas fa-user"></i> <span>My Profile</span></a>
+                </li>
+                <li><a href="{% url 'adoption' %}"><i class="fas fa-paw"></i> <span>Pet Adoption</span></a></li>
+                <li><a href="{% url 'all_appointment' %}"><i class="fas fa-calendar-alt"></i>
+                        <span>Appointments</span></a></li>
+                <li><a href="{% url 'all_doctor' %}"><i class="fas fa-stethoscope"></i> <span>Find Doctor</span></a>
+                </li>
+                <li><a href="{% url 'main_shop' %}"><i class="fas fa-shopping-cart"></i> <span>Shop</span></a></li>
+                <li><a href="{% url 'cart' %}"><i class="fas fa-cart-plus"></i> <span>Cart</span></a>
+                <li><a href="{% url 'user_order' %}"><i class="fas fa-box"></i> <span>My Orders</span></a></li>
+                <li><a href="{% url 'website_reviews' %}"><i class="fas fa-comment-alt"></i> <span>Send
+                            Feedback</span></a></li>
                 <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
             </ul>
         </div>
@@ -266,264 +283,254 @@
         <!-- Main Content -->
         <div class="container main-content">
             {% block content %}
-            <div class="card mb-4 shadow-sm">
-                <div class="card-body d-flex justify-content-between align-items-center">
-                    <div>
-                        <h2 class="card-title">Welcome back, {{request.user}}!</h2>
-                        <p class="card-text text-muted">Here's what's new with your pets</p>
-                    </div>
-                    <div>
-                        <a class="btn btn-outline-danger" href="{% url 'logout' %}">
-                            <i class="fas fa-sign-out-alt"></i> Logout
-                        </a>
-                    </div>
+            <div class="welcome-card d-flex justify-content-between align-items-center">
+                <div>
+                    <h3 class="mb-1">Welcome back, <strong>{{ request.user }}</strong>! 👋</h3>
+                    <p class="text-muted mb-0">Here’s what’s happening with your pets today.</p>
                 </div>
+                <a class="btn btn-outline-danger" href="{% url 'logout' %}">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
             </div>
 
             <!-- Quick Actions -->
             <div class="row mb-4">
                 <div class="col-xl-3 col-md-6 mb-4">
                     <a class="link_a" href="{% url 'all_doctor' %}">
-                    <div class="card border-0 shadow-sm h-100 action-card">
-                        <div class="card-body text-center">
-                            <div class="action-icon action-appointment">
-                                <i class="fas fa-calendar-plus"></i>
+                        <div class="card border-0 shadow-sm h-100 action-card">
+                            <div class="card-body text-center">
+                                <div class="action-icon action-appointment">
+                                    <i class="fas fa-calendar-plus"></i>
+                                </div>
+                                <h5 class="card-title">Book Appointment</h5>
+                                <p class="card-text text-muted">Schedule a visit with our vets</p>
                             </div>
-                            <h5 class="card-title">Book Appointment</h5>
-                            <p class="card-text text-muted">Schedule a visit with our vets</p>
                         </div>
-                    </div></a>
+                    </a>
                 </div>
 
                 <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card border-0 shadow-sm h-100 action-card">
-                        <div class="card-body text-center">
-                            <div class="action-icon action-shop">
-                                <i class="fas fa-shopping-bag"></i>
+                    <a class="link_a" href="{% url 'main_shop' %}">
+                        <div class="card border-0 shadow-sm h-100 action-card">
+                            <div class="card-body text-center">
+                                <div class="action-icon action-shop">
+                                    <i class="fas fa-shopping-bag"></i>
+                                </div>
+                                <h5 class="card-title">Shop Products</h5>
+                                <p class="card-text text-muted">Food, toys, and accessories</p>
                             </div>
-                            <h5 class="card-title">Shop Products</h5>
-                            <p class="card-text text-muted">Food, toys, and accessories</p>
                         </div>
-                    </div>
+                    </a>
                 </div>
 
                 <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card border-0 shadow-sm h-100 action-card">
-                        <div class="card-body text-center">
-                            <div class="action-icon action-emergency">
-                                <i class="fas fa-exclamation-circle"></i>
+                    <a class="link_a" href="{% url 'adoption' %}">
+                        <div class="card border-0 shadow-sm h-100 action-card">
+                            <div class="card-body text-center">
+                                <div class="action-icon action-emergency">
+                                    <!-- <i class="fas fa-exclamation-circle"></i> -->
+                                    <i class="fas fa-paw"></i>
+                                </div>
+                                <h5 class="card-title">Adopt</h5>
+                                <p class="card-text text-muted">Adopt using VetWizard</p>
                             </div>
-                            <h5 class="card-title">Emergency Help</h5>
-                            <p class="card-text text-muted">Get immediate assistance</p>
                         </div>
-                    </div>
+                    </a>
                 </div>
 
                 <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card border-0 shadow-sm h-100 action-card">
-                        <div class="card-body text-center">
-                            <div class="action-icon action-chat">
-                                <i class="fas fa-comment-medical"></i>
+                    <a class="link_a" href="{% url 'website_reviews' %}">
+                        <div class="card border-0 shadow-sm h-100 action-card">
+                            <div class="card-body text-center">
+                                <div class="action-icon action-chat">
+                                    <i class="fas fa-comment-medical"></i>
+                                </div>
+                                <h5 class="card-title">Feedback</h5>
+                                <p class="card-text text-muted">Send your Feedback</p>
                             </div>
-                            <h5 class="card-title">Chat with Vet</h5>
-                            <p class="card-text text-muted">Quick consultation</p>
-                        </div>
-                    </div>
+                    </a>
                 </div>
             </div>
+        </div>
 
-            <!-- Pet Profiles -->
-            <div class="card mb-4 shadow-sm">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-                    <h5 class="mb-0">My Pets</h5>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPetModal">
-                        <i class="fas fa-plus me-2"></i> Add New Pet
-                    </button>
+        <!-- Pet Profiles -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                <h5 class="mb-0">My Pets</h5>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPetModal">
+                    <i class="fas fa-plus me-2"></i> Add New Pet
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% if pets %}
+                    {% for pet in pets %}
+                    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                        <div class="pet-card">
+                            <div class="pet-image">
+                                {% if pet.pet_picture %}
+                                <img src="{{ pet.pet_picture.url }}" alt="{{ pet.name }}" class="img-fluid">
+                                {% else %}
+                                <img src="" alt="{{ pet.name }}" class="img-fluid">
+                                {% endif %}
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ pet.name }}</h5>
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span class="text-muted">{{ pet.breed }}</span>
+                                    <span class="text-muted">Age: {{ pet.age }} years</span>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <a class="btn btn-sm btn-primary flex-grow-1" href="{% url 'update_pet' pet.id %}"
+                                        class="btn btn-edit">Edit </a>
+
+                                    <a class="btn btn-sm btn-primary flex-grow-1"
+                                        href="{% url 'pet_delete' pet.id %}">Delete</a>
+                                </div>
+                                <div class="mt-2">
+                                    <form class="" action="{% url 'toggle_adopt' pet.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit"
+                                            class=" form-control btn btn-sm {% if pet.adopt %}btn-success{% else %}btn-warning{% endif %} flex-grow-1">
+                                            {% if pet.adopt %} Set as Available for Adoption{% else %}Set as Not
+                                            Available for Adoption{% endif %}
+                                        </button>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <div class="col-12">
+                        <div class="alert alert-info text-center py-5" role="alert">
+                            No pets added yet. Click "Add New Pet" to get started.
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        {% if pets %}
-                        {% for pet in pets %}
-                        <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-                            <div class="pet-card">
-                                <div class="pet-image">
-                                    {% if pet.pet_picture %}
-                                    <img src="{{ pet.pet_picture.url }}" alt="{{ pet.name }}" class="img-fluid">
-                                    {% else %}
-                                    <img src="" alt="{{ pet.name }}" class="img-fluid">
+            </div>
+        </div>
+
+        <!-- Modal for adding a new pet -->
+        <div class="modal fade" id="addPetModal" tabindex="-1" aria-labelledby="addPetModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addPetModalLabel">Add New Pet</h5>
+                            <button type="button" class="btn-close bg-white" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                {% for field in form %}
+                                <div class="mb-3 col-md-6">
+                                    {{ field }}
+                                    {% if field.errors %}
+                                    {% for error in field.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
                                     {% endif %}
                                 </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ pet.name }}</h5>
-                                    <div class="d-flex justify-content-between mb-3">
-                                        <span class="text-muted">{{ pet.breed }}</span>
-                                        <span class="text-muted">Age: {{ pet.age }} years</span>
-                                    </div>
-                                    <div class="d-flex gap-2">
-                                        <a class="btn btn-sm btn-primary flex-grow-1" href="{% url 'update_pet' pet.id %}" class="btn btn-edit">Edit </a>
-                                        <button class="btn btn-sm btn-warning flex-grow-1"> Records</button>
-                                        <a class="btn btn-sm btn-primary flex-grow-1" href="{% url 'pet_delete' pet.id %}">Delete</a>
-                                    </div>
-                                </div>
+                                {% endfor %}
                             </div>
                         </div>
-                        {% endfor %}
-                        {% else %}
-                        <div class="col-12">
-                            <div class="alert alert-info text-center py-5" role="alert">
-                                No pets added yet. Click "Add New Pet" to get started.
-                            </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-1"></i> Cancel
+                            </button>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save me-1"></i> Save Pet
+                            </button>
                         </div>
-                        {% endif %}
-                    </div>
+                    </form>
                 </div>
             </div>
-
-            <!-- Modal for adding a new pet -->
-            <div class="modal fade" id="addPetModal" tabindex="-1" aria-labelledby="addPetModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <form method="post" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="addPetModalLabel">Add New Pet</h5>
-                                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row">
-                                    {% for field in form %}
-                                    <div class="mb-3 col-md-6">
-                                        {{ field }}
-                                        {% if field.errors %}
-                                        {% for error in field.errors %}
-                                        <div class="text-danger">{{ error }}</div>
-                                        {% endfor %}
-                                        {% endif %}
-                                    </div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                    <i class="fas fa-times me-1"></i> Cancel
-                                </button>
-                                <button type="submit" class="btn btn-success">
-                                    <i class="fas fa-save me-1"></i> Save Pet
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Upcoming Appointments -->
-            <div class="card mb-4 shadow-sm">
-                <div class="card-header bg-white py-3">
-                    <h5 class="mb-0">Upcoming Appointments</h5>
-                </div>
-                <div class="card-body p-0">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item p-3">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center">
-                                    <div class="appointment-icon me-3">
-                                        <i class="fas fa-calendar-check"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-1">Buddy - Annual Checkup</h6>
-                                        <p class="text-muted mb-0">Dr. Sarah Johnson - Wellness Clinic</p>
-                                    </div>
-                                </div>
-                                <div class="text-center">
-                                    <span class="status-badge status-confirmed">Confirmed</span>
-                                </div>
-                                <div class="text-end">
-                                    <div class="fw-bold">Apr 12, 2025</div>
-                                    <div class="text-muted">10:30 AM</div>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="list-group-item p-3">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center">
-                                    <div class="appointment-icon me-3">
-                                        <i class="fas fa-calendar-check"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-1">Rex - Dental Cleaning</h6>
-                                        <p class="text-muted mb-0">Dr. Smith - Pet Dental Clinic</p>
-                                    </div>
-                                </div>
-                                <div class="text-center">
-                                    <span class="status-badge status-confirmed">Confirmed</span>
-                                </div>
-                                <div class="text-end">
-                                    <div class="fw-bold">Apr 24, 2025</div>
-                                    <div class="text-muted">11:00 AM</div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Recent Orders -->
-            <div class="card mb-4 shadow-sm">
-                <div class="card-header bg-white py-3">
-                    <h5 class="mb-0">Recent Orders</h5>
-                </div>
-                <div class="card-body p-0">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item p-3">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center">
-                                    <div class="order-icon me-3">
-                                        <i class="fas fa-box"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-1">Premium Dog Food (10kg)</h6>
-                                        <p class="text-muted mb-0">Order #VW-85423</p>
-                                    </div>
-                                </div>
-                                <div class="text-center">
-                                    <span class="status-badge status-delivered">Delivered</span>
-                                </div>
-                                <div class="fw-bold">
-                                    $45.99
-                                </div>
-                            </div>
-                        </li>
-                        <li class="list-group-item p-3">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center">
-                                    <div class="order-icon me-3">
-                                        <i class="fas fa-box"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-1">Dog Vitamins (60 tablets)</h6>
-                                        <p class="text-muted mb-0">Order #VW-86012</p>
-                                    </div>
-                                </div>
-                                <div class="text-center">
-                                    <span class="status-badge status-processing">Processing</span>
-                                </div>
-                                <div class="fw-bold">
-                                    $32.75
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <footer class="bg-white rounded shadow p-4 mb-4">
-                <div class="text-center text-muted">
-                    <p class="mb-0">&copy; 2025 VET WIZARD. All rights reserved.</p>
-                </div>
-            </footer>
-            {% endblock %}
         </div>
+
+        <!-- Upcoming Appointments -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0">Upcoming Appointments</h5>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for i in appointment %}
+    <li class="list-group-item p-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <div class="appointment-icon me-3">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div>
+                    <h6 class="mb-1">Dr. {{ i.doctor }}</h6>
+                    <p class="text-muted mb-0">{{ i.pet }} - {{ i.pet.breed }}</p>
+                </div>
+            </div>
+            <div class="text-end">
+                <div class="fw-bold">{{ i.appointment_date }}</div>
+                <div class="text-muted">{{ i.appointment_time }}</div>
+            </div>
+        </div>
+    </li>
+{% empty %}
+    <li class="list-group-item p-3 text-center">
+        <div class="text-muted">No appointments scheduled yet.</div>
+    </li>
+{% endfor %}
+
+                    
+                </ul>
+            </div>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0">Recent Orders</h5>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for i in order %}
+                    <li class="list-group-item p-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <div class="order-icon me-3">
+                                    <i class="fas fa-box"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">{{i.product}}</h6>
+                                    <p class="text-muted mb-0">{{i.product.description}}</p>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <span class="status-badge status-delivered">{{i.quantity}}</span>
+                            </div>
+                            <div class="fw-bold">
+                                <i class="bi bi-currency-rupee"></i> {{i.total_price}}
+                            </div>
+                        </div>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item p-3 text-center">
+                        <div class="text-muted">You have no orders yet.</div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="bg-white rounded shadow p-4 mb-4">
+            <div class="text-center text-muted">
+                <p class="mb-0">&copy; 2025 VET WIZARD. All rights reserved.</p>
+            </div>
+        </footer>
+        {% endblock %}
+    </div>
     </div>
 
     <!-- Scripts -->
@@ -560,7 +567,7 @@
                     }
                 });
             });
-        
+
         });
     </script>
 </body>

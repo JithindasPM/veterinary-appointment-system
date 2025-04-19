@@ -1,0 +1,136 @@
+{% extends 'user.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    :root {
+        --primary: #8e44ad;
+        --secondary: #3498db;
+        --dark: #2c3e50;
+        --light: #ecf0f1;
+        --danger: #e74c3c;
+        --warning: #f39c12;
+        --success: #2ecc71;
+    }
+
+    body {
+        background-color: #f5f7fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Pet Cards */
+    .pet-card {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        height: 100%;
+    }
+
+    .pet-image {
+        height: 150px;
+        overflow: hidden;
+    }
+
+    .pet-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    /* Media Queries */
+    @media (max-width: 992px) {
+    }
+
+    .link_a {
+        text-decoration: none;
+        color: black;
+    }
+    .welcome-card {
+        background: linear-gradient(to right, #f8d7da, #fff);
+        border-left: 6px solid #dc3545;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+</style>
+
+<div class="welcome-card d-flex justify-content-between align-items-center">
+    <div>
+        <h3 class="mb-1">Welcome back, <strong>{{ request.user }}</strong>! 👋</h3>
+        <p class="text-muted mb-0">Here’s what’s happening with your pets today.</p>
+    </div>
+    <a class="btn btn-outline-danger" href="{% url 'logout' %}">
+        <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+</div>
+
+<!-- Pet Profiles -->
+<div class="card mb-4 shadow-sm">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+        <h5 class="mb-0 ms-4">Pets for Adoption</h5>
+        <div style="text-align: center; margin: 2rem 0;">
+            <a href="{% url 'adoption_requests' %}" class="btn btn-primary me-2">
+                <i class="fas fa-user-check"></i> Requests for You
+            </a>
+            <a href="{% url 'my_adoption_requests' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-list"></i> All Requests
+            </a>
+        </div>
+        
+    </div>
+    <div class="card-body">
+        <div class="row">
+            {% if pet_with_owners %}
+    {% for item in pet_with_owners %}
+        {% with pet=item.pet owner=item.owner %}
+        <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+            <div class="pet-card">
+                <div class="pet-image">
+                    {% if pet.pet_picture %}
+                        <img src="{{ pet.pet_picture.url }}" alt="{{ pet.name }}" class="img-fluid">
+                    {% else %}
+                        <img src="{% static 'default_pet.png' %}" alt="{{ pet.name }}" class="img-fluid">
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ pet.name }}</h5>
+                    <p><strong>Species:</strong> {{ pet.species }}</p>
+                    <p><strong>Breed:</strong> {{ pet.breed }}</p>
+                    <p><strong>Age:</strong> {{ pet.age }} years</p>
+
+                    {% if owner %}
+                        <p><strong>Owner Name:</strong> {{ owner.full_name }}</p>
+                        <p><strong>Phone:</strong> {{ owner.phone_number }}</p>
+                        <p><strong>Email:</strong> {{ owner.email }}</p>
+                        <p><strong>Address:</strong> {{ owner.address }}</p>
+                    {% else %}
+                        <p><em>Owner information not available</em></p>
+                    {% endif %}
+                    {% if pet.adopt %}
+    <!-- Redirect to Adopter Form -->
+    <a href="{% url 'adopter_details' pet.id %}" class="btn btn-sm btn-info">Adopt this Pet</a>
+{% endif %}
+                </div>
+            </div>
+        </div>
+        {% endwith %}
+    {% endfor %}
+{% else %}
+    <div class="col-12">
+        <div class="alert alert-info text-center py-5" role="alert">
+            No pets added yet. Click "Add New Pet" to get started.
+        </div>
+    </div>
+{% endif %}
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+{% endblock %}

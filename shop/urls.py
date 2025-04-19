@@ -14,6 +14,7 @@ from shop.views import Product_Delete_View
 from shop.views import Product_Detail_View
 from .views import AddToCartView
 from shop.views import Cart_Delete_View
+from shop.views import All_Orders_View
 
 
 urlpatterns = [
@@ -31,6 +32,8 @@ urlpatterns = [
     path('cart/', views.cart_view, name='cart'),
     path('cart_delete/<int:pk>/', Cart_Delete_View.as_view(), name='cart_delete'),
     path('checkout_product/<int:item_id>/', views.checkout_product, name='checkout_product'),
-path('success_payment/', views.success_payment, name='success_payment'),
+    path('success_payment/', views.success_payment, name='success_payment'),
+    path('all_order', All_Orders_View.as_view(), name='all_order'),
+    
     
 ]

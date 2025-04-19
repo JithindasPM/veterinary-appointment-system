@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.views import View
-
+from django.db.models import Sum
 
 from shop.models import Product_Category
 from shop.models import Product
@@ -15,7 +15,16 @@ from shop.forms import Product_Form
     
 class Shop_View(View):
     def get(self,request):
-        return render(request,'shop.html')
+        orders = Cart.objects.filter(buy=True)
+        total_orders = orders.count()
+        total_revenue = orders.aggregate(Sum('total_price'))['total_price__sum'] or 0
+        order=Cart.objects.filter(buy=True).order_by('-id')[:2]
+        product=Product.objects.all().order_by('-id')[:2]
+        total_products = Product.objects.count()
+        total_categories = Product_Category.objects.count()
+        return render(request,'shop.html',{'order':order,'product':product,'total_products':total_products,
+                                           'total_categories':total_categories,'total_orders':total_orders,
+                                           'total_revenue':total_revenue})
     
 class Main_Shop_View(View):
     def get(self, request):
@@ -169,19 +178,6 @@ def checkout_product(request, item_id):
 
     return render(request, 'checkout.html', context)
 
-from django.views.decorators.csrf import csrf_exempt
-
-# @csrf_exempt
-# def success_payment(request):
-#     cart_item_id = request.session.get('cart_item_id')
-#     if cart_item_id:
-#         cart_item = Cart.objects.filter(id=cart_item_id, user=request.user).first()
-#         if cart_item:
-#             cart_item.buy = True
-#             cart_item.save()
-#     return redirect('cart')  # Or a success page
-
-from django.shortcuts import redirect
 from .models import Cart, Product
 from django.views.decorators.csrf import csrf_exempt
 
@@ -208,3 +204,7 @@ def success_payment(request):
 
     return redirect('cart')  # Or a dedicated success page
 
+class All_Orders_View(View):
+    def get(self,request):
+        order=Cart.objects.filter(buy=True).order_by('-id')
+        return render(request,'all_order.html',{'order':order})

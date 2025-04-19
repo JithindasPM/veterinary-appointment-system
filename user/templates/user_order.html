@@ -1,0 +1,181 @@
+{% extends 'user.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .welcome-card {
+        background: linear-gradient(to right, #f8d7da, #fff);
+        border-left: 6px solid #dc3545;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+</style>
+<div class="container mt-3">
+
+    <div class="welcome-card d-flex justify-content-between align-items-center">
+        <div>
+            <h3 class="mb-1">Welcome back, <strong>{{ request.user }}</strong>! 👋</h3>
+            <p class="text-muted mb-0">Here’s what’s happening with your pets today.</p>
+        </div>
+        <a class="btn btn-outline-danger" href="{% url 'logout' %}">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3><i class="fas fa-shopping-bag me-2"></i>Your Orders</h3>
+                <a href="{% url 'main_shop' %}" class="btn btn-outline-primary"><i
+                        class="fas fa-arrow-left me-2"></i>Continue Shopping</a>
+            </div>
+            <hr>
+        </div>
+    </div>
+
+    {% if order %}
+    <div class="row">
+        {% for item in order %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="{{ item.product.image.url }}" class="img-fluid rounded-start h-100 object-fit-cover"
+                            alt="{{ item.product.name }}">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.product.name }}</h5>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-success">Payed</span>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <span>Quantity:</span>
+                                    <span class="fw-bold">{{ item.quantity }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span>Price per item:</span>
+                                    <span class="fw-bold">₹{{ item.product.price }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span>Total Price:</span>
+                                    <span class="fw-bold text-success">₹{{ item.total_price }}</span>
+                                </div>
+                            </div>
+
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    <i class="far fa-calendar-alt me-1"></i>Ordered on: {{ item.added_at|date:"M d, Y"
+                                    }}
+                                    <span class="ms-2 text-secondary">{{ item.added_at|date:"H:i" }}</span>
+                                </small>
+                            </p>
+
+                            <div class="d-flex justify-content-end mt-2">
+                                <button class="btn btn-sm btn-outline-secondary me-2" data-bs-toggle="modal"
+                                    data-bs-target="#orderDetails{{ item.id }}">
+                                    View Details
+                                </button>
+                                <a class="btn btn-sm btn-primary" href="{% url 'main_shop' %}"><i
+                                        class="fas fa-sync-alt me-1"></i>Shop</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Details Modal -->
+        <div class="modal fade" id="orderDetails{{ item.id }}" tabindex="-1"
+            aria-labelledby="orderDetailsLabel{{ item.id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="orderDetailsLabel{{ item.id }}">Order Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <img src="{{ item.product.image.url }}" class="img-fluid rounded"
+                                    alt="{{ item.product.name }}">
+                            </div>
+                            <div class="col-md-8">
+                                <h5>{{ item.product.name }}</h5>
+                                <p class="text-muted">{{ item.product.description|truncatewords:20 }}</p>
+                            </div>
+                        </div>
+
+                        <div class="card mb-3">
+                            <div class="card-header bg-light">
+                                Order Information
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-2">
+                                    <div class="col-6">Ordered On:</div>
+                                    <div class="col-6 text-end">{{ item.added_at|date:"M d, Y H:i" }}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-6">Quantity:</div>
+                                    <div class="col-6 text-end">{{ item.quantity }}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-6">Price Per Item:</div>
+                                    <div class="col-6 text-end">₹{{ item.product.price }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">Total Price:</div>
+                                    <div class="col-6 text-end text-success fw-bold">₹{{ item.total_price }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <a class="btn btn-primary" href="{% url 'main_shop' %}"><i
+                                class="fas fa-sync-alt me-1"></i>Shop</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center py-5">
+                    <div class="mb-4">
+                        <i class="fas fa-shopping-bag fa-5x text-muted"></i>
+                    </div>
+                    <h4 class="text-muted mb-3">Your order history is empty</h4>
+                    <p class="text-muted mb-4">Looks like you haven't made any purchases yet.</p>
+                    <a href="{% url 'main_shop' %}" class="btn btn-primary">Start Shopping</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add any JavaScript functionality here
+    document.addEventListener('DOMContentLoaded', function () {
+        // Example: Add hover effects to order cards
+        const orderCards = document.querySelectorAll('.card');
+        orderCards.forEach(card => {
+            card.addEventListener('mouseenter', function () {
+                this.classList.add('shadow');
+            });
+            card.addEventListener('mouseleave', function () {
+                this.classList.remove('shadow');
+            });
+        });
+    });
+</script>
+{% endblock %}

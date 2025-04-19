@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum 
 
 
 from doctor.models import Doctor_Profile
@@ -13,6 +14,8 @@ from user.models import PetOwner_Profile
 from user.models import Doctor_Appointment
 from admins.models import User
 from admins.models import WebsiteReview
+from shop.models import Cart
+from shop.models import Product
 
 
 class Home_View(View):
@@ -22,7 +25,14 @@ class Home_View(View):
 
 class Admin_View(View):
     def get(self,request):
-        return render(request,'admin.html')
+        total_purchased = Cart.objects.filter(buy=True).aggregate(total=Sum('total_price'))['total'] or 0
+        total_stock = Product.objects.aggregate(total=Sum('stock'))['total'] or 0
+        user_count = User.objects.filter(user_type='user').count()
+        doctor_count = User.objects.filter(user_type='doctor').count()
+        appointment=Doctor_Appointment.objects.all().order_by('-id')[:2]
+        all_order=Cart.objects.filter(buy=True).order_by('-id')[:2]
+        return render(request,'admin.html',{'appointment':appointment,'all_order':all_order,'user_count':user_count,
+                                            'doctor_count':doctor_count,'total_stock':total_stock,'total_purchased':total_purchased})
 
 
 class Registration_View(View):
@@ -94,8 +104,7 @@ class Logout_View(View):
     
 class All_Doctor_Admin_View(View):
     def get(self,request):
-        doctors=User.objects.filter(user_type='doctor').order_by('-id')
-        return render(request,'all_doctor_admin.html',{'doctors':doctors})
+        return render(request,'all_doctor_admin.html')
     
 
 class Toggle_Doctor_Approval_View(View):

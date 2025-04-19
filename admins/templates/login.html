@@ -10,8 +10,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <style>
         body {
-            background: linear-gradient(to right, #74ebd5, #acb6e5);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('/media/bg/index_main.jpg');
+            background-position: center;
+            background-size: cover;
         }
 
         .login-container {
@@ -19,7 +21,6 @@
             margin: 80px auto;
             padding: 40px;
             border-radius: 20px;
-            background: #ffffff;
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
         }
 
@@ -63,16 +64,23 @@
         .text{
             font-family: 'Times New Roman', Times, serif;
         }
+        .link_a{
+            color: white;
+            text-shadow: 0 0 2px;
+        }
+        .form-control {
+            background-color: rgba(255, 255, 255, 0.175) !important;
+        }
     </style>
 </head>
 <body>
     <div class="container shadow rounded">
-        <h1 class="p-3 mt-3 text"><a style="text-decoration: none;" href="{% url 'home' %}">VetWizard</a></h1>
+        <h1 class="p-3 mt-3 text"><a class="link_a" style="text-decoration: none;" href="{% url 'home' %}">VetWizard</a></h1>
     </div>
 
 <div class="container">
     <div class="login-container">
-        <h3 class="text-center mb-4">🔒 Login to <span class="text-primary">VetWizard</span></h3>
+        <h3 class="text-center mb-4">🔒 Login to <span class="text-light">VetWizard</span></h3>
 
         <form method="post" novalidate>
             {% csrf_token %}
@@ -104,7 +112,7 @@
             </div>
 
             <div class="mt-4 d-flex justify-content-center align-items-end w-100">
-                <p><a style="text-decoration: none;" href="{% url 'registration' %}"><span class="text-dark">New to VitWizard ?</span> Join now</a></p>
+                <p><a class="link_a" style="text-decoration: none;" href="{% url 'registration' %}"><span class="text-dark">New to VitWizard ?</span> Join now</a></p>
             </div>
         </form>
     </div>

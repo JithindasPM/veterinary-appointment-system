@@ -1,0 +1,98 @@
+{% extends 'user.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .welcome-card {
+        background: linear-gradient(to right, #f8d7da, #fff);
+        border-left: 6px solid #dc3545;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .adoption-section {
+        padding: 1.5rem;
+        background-color: #fdfdfd;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.08);
+    }
+
+    .table thead {
+        background-color: #f8f9fa;
+    }
+
+    .table td, .table th {
+        vertical-align: middle;
+    }
+</style>
+
+<div class="welcome-card d-flex justify-content-between align-items-center">
+    <div>
+        <h3 class="mb-1">Welcome back, <strong>{{ request.user }}</strong>! 👋</h3>
+        <p class="text-muted mb-0">Here’s what’s happening with your pets today.</p>
+    </div>
+    <a class="btn btn-outline-danger" href="{% url 'logout' %}">
+        <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+</div>
+
+<div class="mb-4 text-end">
+    <a href="{% url 'adoption_requests' %}" class="btn btn-primary me-2">
+        <i class="fas fa-user-check"></i> Requests for You
+    </a>
+    <a href="{% url 'my_adoption_requests' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-list"></i> All Requests
+    </a>
+</div>
+
+<div class="adoption-section">
+    <h4 class="mb-4">🐾 Adoption Requests</h4>
+
+    {% if adoption_requests %}
+        <div class="table-responsive">
+            <table class="table align-middle table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th>Pet</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in adoption_requests %}
+                        <tr>
+                            <td>{{ request.name }}</td>
+                            <td>{{ request.phone }}</td>
+                            <td>{{ request.email }}</td>
+                            <td>{{ request.address }}</td>
+                            <td><strong>{{ request.pet.name }}</strong></td>
+                            <td>
+                                <form action="{% url 'toggle_adoption' request.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn {% if request.is_approved %}btn-success{% else %}btn-warning{% endif %}">
+                                        {% if request.is_approved %}
+                                            Revert Approval
+                                        {% else %}
+                                            Approve Adoption
+                                        {% endif %}
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center">
+            No adoption requests yet.
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

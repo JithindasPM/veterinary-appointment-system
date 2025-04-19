@@ -13,10 +13,29 @@ from user.models import Doctor_Appointment
 
 class Doctor_View(View):
     def get(self, request):
+        doctor_profile = get_object_or_404(Doctor_Profile, user=request.user)
+        appointments = Doctor_Appointment.objects.filter(doctor=doctor_profile).order_by('-id')[:2]
+
+        appo = Doctor_Appointment.objects.filter(doctor=doctor_profile)
+
+        patient_count = appo.values('patient').distinct().count()
+        total_bookings = appo.count()
+        confirmed_bookings = appo.filter(is_paid=True).count()
+        non_confirmed_bookings = appo.filter(is_paid=True).count()
+
         show_modal = False
         if request.user.user_type == 'doctor' and not request.user.is_approved:
             show_modal = True
-        return render(request, 'doctor.html', {'show_modal': show_modal})
+
+        return render(request, 'doctor.html', {
+            'show_modal': show_modal,
+            'appointments': appointments,
+            'patient_count': patient_count,
+            'total_bookings': total_bookings,
+            'confirmed_bookings': confirmed_bookings,
+            'non_confirmed_bookings':non_confirmed_bookings
+        })
+
 
 
 class Doctor_Profile_Create_View(View):

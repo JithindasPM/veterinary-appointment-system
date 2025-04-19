@@ -76,3 +76,25 @@ class Appointment_Form(forms.ModelForm):
             self.fields['pet'].queryset = Pet.objects.filter(owner=user)
 
 
+from django import forms
+from .models import Adopter
+
+class AdopterForm(forms.ModelForm):
+    class Meta:
+        model = Adopter
+        fields = [ 'phone', 'email', 'address']
+        widgets = {
+            'phone': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter your phone number'
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter your email'
+            }),
+            'address': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter your address',
+                'rows': 3
+            }),
+        }

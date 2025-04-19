@@ -40,7 +40,7 @@
                             <div><strong>Email:</strong> {{ profile.email }}</div>
                             <div><strong>Phone:</strong> {{ profile.phone_number }}</div>
                         </div>
-                        <form class="my-5" action="{% url 'toggle_doctor_approval' doctor.id %}" method="post">
+                        <form class="my-3" action="{% url 'toggle_doctor_approval' doctor.id %}" method="post">
                             {% csrf_token %}
                             {% if doctor.is_approved %}
                                 <button type="submit" class="btn btn-danger">Unapprove</button>
@@ -48,11 +48,6 @@
                                 <button type="submit" class="btn btn-success">Approve</button>
                             {% endif %}
                         </form>
-                        
-                        <div class="doctor-actions">
-                            <button class="doctor-action-btn btn-view">Book Appointment</button>
-                            <button class="doctor-action-btn btn-edit">View Profile</button>
-                        </div>
                     </div>
                 </div>
             {% endif %}

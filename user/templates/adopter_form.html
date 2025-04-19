@@ -1,0 +1,81 @@
+{% extends 'user.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .welcome-card {
+        background: linear-gradient(to right, #f8d7da, #fff);
+        border-left: 6px solid #dc3545;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    .form-container {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    .form-container h4 {
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+        color: #343a40;
+    }
+    label {
+        font-weight: 500;
+        color: #555;
+    }
+    .btn-primary {
+        background-color: #dc3545;
+        border: none;
+        padding: 0.6rem 1.5rem;
+        font-weight: 500;
+        transition: 0.3s;
+    }
+    .btn-primary:hover {
+        background-color: #bd2130;
+    }
+</style>
+
+<div class="welcome-card d-flex justify-content-between align-items-center">
+    <div>
+        <h3 class="mb-1">Welcome back, <strong>{{ request.user }}</strong>! 👋</h3>
+        <p class="text-muted mb-0">Here’s what’s happening with your pets today.</p>
+    </div>
+    <a class="btn btn-outline-danger" href="{% url 'logout' %}">
+        <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+</div>
+
+<div class="form-container">
+    <h4>Adopter Information</h4>
+    <form action="{% url 'adopter_details' pet.id %}" method="post">
+        {% csrf_token %}
+        
+        {% comment %} <div class="form-group mb-3">
+            <label for="id_name">Name</label>
+            <input type="text" name="name" id="id_name" class="form-control" required>
+        </div> {% endcomment %}
+
+        <div class="form-group mb-3">
+            <label for="id_phone">Phone</label>
+            <input type="text" name="phone" id="id_phone" class="form-control" required>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="id_email">Email</label>
+            <input type="email" name="email" id="id_email" class="form-control" required>
+        </div>
+
+        <div class="form-group mb-4">
+            <label for="id_address">Address</label>
+            <textarea name="address" id="id_address" class="form-control" rows="3" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Submit Adopter Details</button>
+    </form>
+</div>
+
+{% endblock %}
