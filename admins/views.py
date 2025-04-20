@@ -103,18 +103,49 @@ class Logout_View(View):
         return redirect('home') 
     
 class All_Doctor_Admin_View(View):
-    def get(self,request):
-        return render(request,'all_doctor_admin.html')
+    def get(self, request):
+        doctors = User.objects.filter(user_type='doctor')
+        return render(request, 'all_doctor_admin.html', {'doctors': doctors})
     
+
+from django.core.mail import send_mail
+from django.conf import settings
 
 class Toggle_Doctor_Approval_View(View):
     def post(self, request, doctor_id):
+        print("✅ POST method reached!")
+        from admins.models import User
         doctor = get_object_or_404(User, id=doctor_id, user_type='doctor')
+        user_obj=Doctor_Profile.objects.get(user=doctor)
+        print(user_obj.email)
+
         doctor.is_approved = not doctor.is_approved
         doctor.save()
+
         status = "approved" if doctor.is_approved else "unapproved"
         messages.success(request, f"Doctor {doctor.username} has been {status}.")
-        return redirect('all_doctor_admin')  
+
+        # Send email if approved
+        if doctor.is_approved:
+            subject = "🎉 VetWizard - Profile Approved"
+            message = (
+                f"Hello Dr. {doctor.username},\n\n"
+                "We’re excited to let you know that your VetWizard profile has been approved! 🎉\n\n"
+                "You can now log in and start managing appointments.\n\n"
+                "Thank you for joining VetWizard.\n\n"
+                "Regards,\n\nTeam VetWizard 🐾"
+            )
+
+            send_mail(
+                subject=subject,
+                message=message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[user_obj.email],
+                fail_silently=False,
+            )
+
+        return redirect('all_doctor_admin')
+
 
 
 class All_Users_View(View):
@@ -233,3 +264,108 @@ def website_reviews(request):
     avg_rating = WebsiteReview.get_average_rating()  # Get average rating
 
     return render(request, 'website_reviews.html', {'reviews': reviews, 'avg_rating': avg_rating})
+
+
+
+
+import random
+from django.core.mail import send_mail
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.views import View
+from django.contrib.auth.hashers import make_password
+from .models import User
+from .forms import PasswordResetForm, OTPVerificationForm  # Create this form
+
+class PasswordResetView(View):
+    def get(self, request):
+        form = PasswordResetForm()
+        return render(request, 'password_reset.html', {'form': form})
+
+    def post(self, request):
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+
+            try:
+                from admins.models import User
+                user = User.objects.get(username=username)
+                if user.user_type == "doctor":
+                    profile = Doctor_Profile.objects.get(user=user)
+                    user_obj = profile.email
+                elif user.user_type == "user":
+                    profile = PetOwner_Profile.objects.get(user=user)
+                    user_obj = profile.email
+                else:
+                    user_obj = None # Fetch user email
+                otp = str(random.randint(100000, 999999))  # Generate 6-digit OTP
+                request.session['reset_otp'] = otp  # Store OTP in session
+                request.session['reset_username'] = username  # Store username
+                
+                # Send OTP via email
+                send_mail(
+                    "Password Reset OTP",
+                    f"Your OTP for password reset is {otp}.",
+                    "your-email@example.com",  # Change to your email
+                    [user_obj],
+                    fail_silently=False
+                )
+
+                messages.success(request, "OTP sent to your email.")
+                return redirect('otp_verification')  # Redirect to OTP verification page
+
+            except User.DoesNotExist:
+                messages.error(request, "Username not found!")
+
+        return render(request, 'password_reset.html', {'form': form})
+
+
+class OTPVerificationView(View):
+    def get(self, request):
+        form = OTPVerificationForm()
+        return render(request, 'otp_verification.html', {'form': form})
+
+    def post(self, request):
+        form = OTPVerificationForm(request.POST)
+        if form.is_valid():
+            entered_otp = form.cleaned_data.get('otp')
+            stored_otp = request.session.get('reset_otp')
+
+            if entered_otp == stored_otp:
+                messages.success(request, "OTP verified successfully! Now reset your password.")
+                return redirect('set_new_password')  # Redirect to set new password page
+            else:
+                messages.error(request, "Invalid OTP! Please try again.")
+
+        return render(request, 'otp_verification.html', {'form': form})
+
+
+class SetNewPasswordView(View):
+    def get(self, request):
+        return render(request, 'set_new_password.html')
+
+    def post(self, request):
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+
+        if new_password != confirm_password:
+            messages.error(request, "Passwords do not match!")
+            return render(request, 'set_new_password.html')
+
+        username = request.session.get('reset_username')
+        try:
+            user = User.objects.get(username=username)
+            user.password = make_password(new_password)  # Hash password
+            user.save()
+            del request.session['reset_otp']  # Remove OTP from session
+            del request.session['reset_username']
+            messages.success(request, "Password reset successful! You can now log in.")
+            return redirect('login')
+
+        except User.DoesNotExist:
+            messages.error(request, "User not found!")
+            return redirect('password_reset')
+
+
+
+

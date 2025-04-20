@@ -99,6 +99,8 @@ class All_Doctor_View(View):
     
 
 from django.http import Http404
+from django.core.mail import send_mail
+from django.conf import settings
 
 def book_appointment(request, doctor_id):
     try:
@@ -116,7 +118,25 @@ def book_appointment(request, doctor_id):
             appointment.doctor = doctor
             appointment.patient = request.user
             appointment.save()
-            return redirect('all_appointment')  
+            send_mail(
+                subject="📅 New Appointment via VetWizard",
+                message=(
+                    f"Hello Dr. {doctor.full_name},\n\n"
+                    f"You have received a new appointment through VetWizard!\n\n"
+                    f"👤 Patient: {request.user.username}\n"
+                    f"📅 Date: {appointment.appointment_date}\n"
+                    f"🐾 Pet: {appointment.pet}\n"
+                    f"📝 Reason: {appointment.reason}\n\n"
+                    f"Please log in to VetWizard to confirm or manage the appointment.\n\n"
+                    f"Thank you,\n\n"
+                    f"🐾 VetWizard Team"
+                ),
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[doctor.email],
+                fail_silently=False,
+            )
+            return redirect('all_appointment') 
+            
     else:
         form = Appointment_Form(user=request.user)  
 
@@ -196,12 +216,6 @@ class ToggleAdoptView(View):
         return redirect('user')  # Change 'pet_list' to your actual pet list view name
 
 
-# class Adoption_View(View):
-#     def get(self, request):
-#         pets = Pet.objects.filter(adopt=True)
-#         return render(request, 'adopt.html', {'pets':pets})
-
-
 from django.contrib.auth.models import User  # default User model
 
 from django.contrib.auth import get_user_model  # Use get_user_model() to get the custom User model
@@ -235,11 +249,23 @@ from .forms import AdopterForm
 class AdopterDetailsView(View):
     def get(self, request, pet_id):
         pet = Pet.objects.get(id=pet_id)
+        owner_username = pet.owner
+        from admins.models import User
+        user_obj = User.objects.get(username=owner_username)
+        owner_profile = PetOwner_Profile.objects.get(user=user_obj)
+        
         form = AdopterForm()
         return render(request, 'adopter_form.html', {'form': form, 'pet': pet})
 
     def post(self, request, pet_id):
         form = AdopterForm(request.POST)
+        
+        pet = Pet.objects.get(id=pet_id)
+        owner_username = pet.owner
+        from admins.models import User
+        user_obj = User.objects.get(username=owner_username)
+        owner_profile = PetOwner_Profile.objects.get(user=user_obj)
+        
         if form.is_valid():
             # Save adopter details in a new Adopter model or update if necessary
             adopter = form.save(commit=False)
@@ -251,10 +277,26 @@ class AdopterDetailsView(View):
             pet = Pet.objects.get(id=pet_id)
             pet.adopt = True  # Assuming the pet is now adopted
             pet.save()
+            
+            send_mail(
+                subject="🐾 VetWizard - New Adoption Request!",
+                message=(
+                    f"Hello {owner_profile.full_name},\n\n"
+                    f"You have received a new adoption request for your pet \"{pet.name}\" on VetWizard.\n\n"
+                    f"Requester Username: {request.user}\n\n"
+                    "Please log in to your VetWizard account to review the request.\n\n"
+                    "Thank you,\n\nTeam VetWizard 🐶"
+                ),
+                from_email=settings.DEFAULT_FROM_EMAIL,  # ✅ change to your email
+                recipient_list=[owner_profile.email],
+                fail_silently=False,
+            )
 
             return redirect('my_adoption_requests') 
         
 from .models import Pet, Adopter
+from django.core.mail import send_mail
+from django.conf import settings
 
 class AdoptionRequestsView(View):
     def get(self, request):
@@ -270,8 +312,35 @@ class AdoptionRequestsView(View):
 class ToggleAdoptionView(View):
     def post(self, request, adopter_id):
         adopter = Adopter.objects.get(id=adopter_id)
+        
         adopter.is_approved = not adopter.is_approved  # Toggle the approval status
         adopter.save()
+        
+        if adopter.is_approved:
+            subject = "🐾 VetWizard - Adoption Request Approved!"
+            message = (
+                f"Hello {adopter.name},\n\n"
+                f"Great news! Your adoption request for the pet \"{adopter.pet.name}\" has been approved 🎉\n\n"
+                f"Our team or the pet owner will contact you shortly.\n\n"
+                "Thank you for choosing VetWizard.\n\n"
+                "Warm regards,\n\nTeam VetWizard 🐶"
+            )
+        else:
+            subject = "🐾 VetWizard - Adoption Request Rejected"
+            message = (
+                f"Hello {adopter.name},\n\n"
+                f"We're sorry to inform you that your adoption request for \"{adopter.pet.name}\" was not approved.\n\n"
+                "Feel free to explore other adorable pets available for adoption on VetWizard.\n\n"
+                "Warm regards,\n\nTeam VetWizard 🐾"
+            )
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[adopter.email],
+            fail_silently=False,
+        )
+        
         return redirect('adoption_requests')  # Redirect back to the adoption requests page
 
 class User_Orders(View):

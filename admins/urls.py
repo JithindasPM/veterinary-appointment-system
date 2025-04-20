@@ -10,7 +10,7 @@ from admins.views import All_Users_View
 from admins.views import Groq_View
 from admins.views import All_Booking_Admin_View
 from admins.views import website_reviews
-
+from admins.views import PasswordResetView, OTPVerificationView, SetNewPasswordView
 
 urlpatterns = [
     
@@ -24,5 +24,9 @@ urlpatterns = [
     path("chatbot/", Groq_View.as_view(), name="chatbot"),
     path("all_booking_admin/", All_Booking_Admin_View.as_view(), name="all_booking_admin"),
     path('reviews/', website_reviews, name='website_reviews'),
+    
+    path('password-reset/', PasswordResetView.as_view(), name='password_reset'),
+    path('otp-verification/', OTPVerificationView.as_view(), name='otp_verification'),
+    path('set-new-password/', SetNewPasswordView.as_view(), name='set_new_password'),
     
 ]

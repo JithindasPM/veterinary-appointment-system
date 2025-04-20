@@ -1,6 +1,8 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.views import View
 from django.db.models import Sum
+from django.core.mail import send_mail
+from django.conf import settings
 
 from shop.models import Product_Category
 from shop.models import Product
@@ -150,6 +152,7 @@ from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Cart
 from decimal import Decimal
+from user.models import PetOwner_Profile
 
 razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
@@ -184,6 +187,8 @@ from django.views.decorators.csrf import csrf_exempt
 @csrf_exempt
 def success_payment(request):
     cart_item_id = request.session.get('cart_item_id')
+    user_obj=request.user
+    user_objs=PetOwner_Profile.objects.get(user=user_obj)
     
     if cart_item_id:
         cart_item = Cart.objects.filter(id=cart_item_id, user=request.user).first()
@@ -198,6 +203,24 @@ def success_payment(request):
                 # Mark as bought
                 cart_item.buy = True
                 cart_item.save()
+                
+                send_mail(
+                    subject="🛒 Order Confirmation - VetWizard",
+                    message=(
+                        f"Hello {request.user.username},\n\n"
+                        f"Thank you for your purchase on VetWizard!\n\n"
+                        f"🛍️ Product: {product.name}\n"
+                        f"🧾 Quantity: {cart_item.quantity}\n"
+                        f"💰 Total Paid: ₹{cart_item.total_price}\n\n"
+                        f"Your order is being processed. You'll hear from us soon!\n\n"
+                        f"With love,\n\n"
+                        f"🐾 VetWizard Team"
+                    ),
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[user_objs.email],
+                    fail_silently=False
+                )
+                
             else:
                 # Optional: You can add a message if stock is insufficient
                 print("Not enough stock!")
